@@ -5,7 +5,7 @@ from app.models.tee import TEE
 
 # Model Contains Information for Courses Ratings
 class RATING(db.Model):
-  COURSE_RATING_ID =db.Column(db.Integer, primary_key=True)
+  COURSE_RATING_ID = db.Column(db.Integer, primary_key=True)
   TEE_ID = db.Column(db.Integer, db.ForeignKey(TEE.TEE_ID))
   NAME = db.Column(db.String, nullable=False)  # FRONT, BACK, FULL, ETC
   HOLE_COUNT = db.Column(db.Integer, db.CheckConstraint('HOLE_COUNT = 9 OR HOLE_COUNT = 18'), server_default='18')
@@ -35,6 +35,12 @@ class RATING(db.Model):
   def validate_slope(self, key, value):
     if not 55 <= value <= 155:
       raise ValueError(f'Invalid Slope Value - {value} - Slope Value must be between 55 and 155')
+    return value
+
+  @orm.validates('PAR')
+  def validate_slope(self, key, value):
+    if not 27 <= value <= 80:
+      raise ValueError(f'Invalid Par Value - {value} - PAr Value must be between 27 and 80')
     return value
 
 def __init__(self, COURSE_RATING_ID, TEE_ID, NAME, HOLE_COUNT, GENDER, START_HOLE, COURSE_RATING, SLOPE, PAR, BOGEY_RATING, EFFECTIVE_DATE):

@@ -179,7 +179,7 @@ This table will hold data concerning each tee set on golf courses
 
 #### RATINGS
 
-This table will hold data concerning the 
+This table will hold data concerning the ratings for each tee
 
 | NAME | DATA TYPE | UNIQUE | NOT NULL | PRIMARY KEY | DEFAULT | FOREIGN KEY | CONSTRAINTS | DESCRIPTION
 | --- | --- | :-: | :-: | :-: | :-: | :-: | :-: | --- |
@@ -193,7 +193,26 @@ This table will hold data concerning the
 | SLOPE | INTEGER | | X | | | | >=55 & <=155 | Slope Rating for this rating |
 | PAR | INTEGER | | X | | | | >=27 & <=80 | Par for this rating |
 | BOGEY_RATING | FLOAT | | | | | | >0 | Bogey Rating for this rating |
-| EFFECTIVE_DATE | DATE | | X | | TODAY() | | | Date the record is effectively active |
+| EFFECTIVE_DATE | DATE | | X | | CURRENT_DATE | | | Date the record is effectively active |
+| CREATED_AT | TIMESTAMP | | X | | NOW() | | | Timestamp record was created |
+| UPDATED_AT | TIMESTAMP | | X | | NOW() | | | Timestamp record was last updated |
+
+#### HOLE
+
+This table will hold data concerning the holes for each tee
+
+| NAME | DATA TYPE | UNIQUE | NOT NULL | PRIMARY KEY | DEFAULT | FOREIGN KEY | CONSTRAINTS | DESCRIPTION
+| --- | --- | :-: | :-: | :-: | :-: | :-: | :-: | --- |
+| RATING_ID | SERIAL | x | x | x | | | | ID for the hole |
+| TEE_ID | INTEGER | | x | | | TEE.TEE_ID | | | ID for the tee the hole is attached |
+| NUMBER | INTEGER | | x | | | | > 0 and <= 18 | Hole Number of the Golf Course
+| YARDS | INTEGER | | | x | | | > 0 and <= 999 | Hole Length (Yards) |
+| METERS | INTEGER | | x | | | | > 0 and <= 999 | Hole Length (Meters) |
+| PAR_MALE | INTEGER | | | | | | >= 3 and <= 6 | Par for male ratings |
+| SI_MALE | INTEGER | | | | | | > 0 and <= 18 | Stroke Index for male ratings |
+| PAR_FEMALE | INTEGER | | | | | | >= 3 and <= 6 | Par for female ratings |
+| SI_FEMALE | INTEGER | | | | | | > 0 and <= 18 | Stroke Index for female ratings |
+| EFFECTIVE_DATE | DATE | | X | | CURRENT_DATE | | | Date the record is effectively active |
 | CREATED_AT | TIMESTAMP | | X | | NOW() | | | Timestamp record was created |
 | UPDATED_AT | TIMESTAMP | | X | | NOW() | | | Timestamp record was last updated |
 

@@ -5,7 +5,7 @@ from app.models.course import COURSE
 
 # Model Contains Information for Courses Tees
 class TEE(db.Model):
-  TEE_ID =db.Column(db.Integer, primary_key=True)
+  TEE_ID = db.Column(db.Integer, primary_key=True)
   COURSE_ID = db.Column(db.Integer, db.ForeignKey(COURSE.COURSE_ID), nullable=False)
   NAME = db.Column(db.String, nullable=False)
   YARDAGE = db.Column(db.Integer, db.CheckConstraint('YARDAGE > 0'), nullable=False, server_default='7200')
@@ -41,3 +41,5 @@ def __init__(self, TEE_ID, COURSE_ID, FACILITY_ID, NAME, YARDAGE, METERS, HOLE_C
   self.YARDAGE = YARDAGE
   self.METERS = METERS
   self.HOLE_COUNT = HOLE_COUNT
+
+  return self
