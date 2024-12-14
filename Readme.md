@@ -147,6 +147,21 @@ CLASSIFICATION ENUM VALUE CODES
 | S |	Semi-Private |
 | O |	Other |
 
+#### COURSE
+
+This table will hold data concerning each golf course
+
+| NAME | DATA TYPE | UNIQUE | NOT NULL | PRIMARY KEY | DEFAULT | FOREIGN KEY | CONSTRAINTS | DESCRIPTION
+| --- | --- | :-: | :-: | :-: | :-: | :-: | :-: | --- |
+| COURSE_ID | INTEGER | X | X | X | | | | ID for the course |
+| FACILITY_ID | INTEGER | | X | | | FACILITY.FACILITY_ID | | ID for the facility the course is acctached |
+| NAME | VARCHAR(100) | | | | | | | Name of the course, can be null for courses with 1 course |
+| HOLE_COUNT | INTEGER | | X | | 18 | | >0 & <=18 | Number of holes on the course |
+| ESTABLISHED | INTEGER | | | | | | >1574 & <=today | Year the course was opened |
+| ARCHITECT | VARCHAR(100) | | | | | | | Course Designer |
+| CREATED_AT | TIMESTAMP | | X | | NOW() | | | Timestamp record was created |
+| UPDATED_AT | TIMESTAMP | | X | | NOW() | | | Timestamp record was last updated |
+
 ### End Points
 
 End points not yet developed

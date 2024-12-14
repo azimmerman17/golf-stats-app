@@ -17,8 +17,8 @@ class FACILITY(db.Model):
   COUNTRY = db.Column(db.String(3))
   GEO_LAT = db.Column(db.FLOAT, db.CheckConstraint('GEO_LAT > -90', name='CHECK_GEO_LAT_MIN'), db.CheckConstraint('GEO_LAT < 90', name='CHECK_GEO_LAT_MAX'))
   GEO_LON = db.Column(db.FLOAT, db.CheckConstraint('GEO_LON > -180', name='CHECK_GEO_LON_MIN'), db.CheckConstraint('GEO_LON < 180', name='CHECK_GEO_LON_MAX'))
-  CREATED_AT = db.Column(db.TIMESTAMP, nullable=False, server_default=f'{datetime.now()}')
-  UPDATED_AT = db.Column(db.TIMESTAMP, nullable=False, server_default=f'{datetime.now()}')
+  CREATED_AT = db.Column(db.TIMESTAMP, nullable=False, default=datetime.now())
+  UPDATED_AT = db.Column(db.TIMESTAMP, nullable=False, default=datetime.now())
 
   @orm.validates('COURSE_COUNT')
   def validate_course_count(self, key, value):
@@ -31,7 +31,7 @@ class FACILITY(db.Model):
     if value < 1400:
       raise ValueError(f'Invalid Facility Established Year - {value} - The first writen record of golf is from 1457 and the first modern day course was esablished in 1574, please sumbit a later date.')
     elif value > date.today().year:
-      raise ValueError(f'Invalid Facility Established Year - {value} - Facilities cannot have a future dated established year, its likely this facility is still under construction, please resumbit this facility once it opens.')
+      raise ValueError(f'Invalid Facility Established Year - {value} - Facilities cannot have a future dated established year, it is likely this facility is still under construction, please resumbit this facility once it opens.')
     return value
 
   @orm.validates('GEO_LAT')
