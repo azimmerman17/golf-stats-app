@@ -21,7 +21,6 @@ def upgrade():
     op.create_table('tee',
     sa.Column('TEE_ID', sa.Integer(), nullable=False),
     sa.Column('COURSE_ID', sa.Integer(), nullable=False),
-    sa.Column('FACILITY_ID', sa.Integer(), nullable=False),
     sa.Column('NAME', sa.String(), nullable=False),
     sa.Column('YARDAGE', sa.Integer(), server_default='7200', nullable=False),
     sa.Column('METERS', sa.Integer(), server_default='6600', nullable=False),
