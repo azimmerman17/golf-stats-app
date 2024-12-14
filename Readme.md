@@ -162,6 +162,22 @@ This table will hold data concerning each golf course
 | CREATED_AT | TIMESTAMP | | X | | NOW() | | | Timestamp record was created |
 | UPDATED_AT | TIMESTAMP | | X | | NOW() | | | Timestamp record was last updated |
 
+#### TEE
+
+This table will hold data concerning each tee set on golf courses
+
+| NAME | DATA TYPE | UNIQUE | NOT NULL | PRIMARY KEY | DEFAULT | FOREIGN KEY | CONSTRAINTS | DESCRIPTION
+| --- | --- | :-: | :-: | :-: | :-: | :-: | :-: | --- |
+| TEE_ID | INTEGER | X | X | X | | | | ID for the tee set |
+| COURSE_ID | INTEGER | | X | | | COURSE.COURSE_ID | |ID for the course the tee is attached |
+| FACILITY_ID | INTEGER | | X | | | FACILITY.FACILITY_ID | | ID for the facility the tee_set is attached |
+| NAME | VARCHAR(100) | | X | | | | | Name of the tee, cannot be null |
+| HOLE_COUNT | INTEGER | | X | | 18 | | >0 & <=18 | Number of holes on this tee set |
+| YARDAGE | INTEGER | | X | | 7200 | | >0  | Length of the course from this tee set in yards  |
+| METERS | INTEGER | | X | | 6500 | | >0 | Length of the course from this tee set in meters |
+| CREATED_AT | TIMESTAMP | | X | | NOW() | | | Timestamp record was created |
+| UPDATED_AT | TIMESTAMP | | X | | NOW() | | | Timestamp record was last updated |
+
 ### End Points
 
 End points not yet developed

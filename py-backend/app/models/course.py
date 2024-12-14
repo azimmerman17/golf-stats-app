@@ -34,8 +34,9 @@ class COURSE(db.Model):
       raise ValueError(f'Invalid Course Established Year - {value} - Courses cannot have a future dated established year, it is likely this facility is still under construction, please resumbit this course once it opens.')
     return value
 
-def __init__(self, COURSE_ID, NAME, HOLE_COUNT, ESTABLISHED, ARCHITECT):
+def __init__(self, COURSE_ID, FACILITY_ID, NAME, HOLE_COUNT, ESTABLISHED, ARCHITECT):
   self.COURSE_ID = COURSE_ID
+  self.FACILITY_ID = FACILITY_ID
   self.NAME = NAME
   self.HOLE_COUNT = HOLE_COUNT
   self.ESTABLISHED = ESTABLISHED

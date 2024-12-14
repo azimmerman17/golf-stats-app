@@ -22,7 +22,7 @@ def upgrade():
     sa.Column('COURSE_ID', sa.Integer(), nullable=False),
     sa.Column('FACILITY_ID', sa.Integer(), nullable=False),
     sa.Column('NAME', sa.String(length=50), nullable=True),
-    sa.Column('HOLE_COUNT', sa.Integer(), nullable=False, server_default=18),
+    sa.Column('HOLE_COUNT', sa.Integer(), nullable=False, server_default='18'),
     sa.Column('ESTABLISHED', sa.Integer(), nullable=True),
     sa.Column('ARCHITECT', sa.String(length=100), nullable=True),
     sa.Column('CREATED_AT', sa.TIMESTAMP(), nullable=False),

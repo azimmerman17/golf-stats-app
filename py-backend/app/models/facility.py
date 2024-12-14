@@ -46,16 +46,18 @@ class FACILITY(db.Model):
       raise ValueError(f'Invalid Facility Longitude - {value} - The maximum and minimun longitude values on Earth is +/- 180 degrees, please check and resubmit your coordinates')
     return value
 
-  def __init__(self, FACILITY_ID, NAME, HOLE_COUNT, CLASSIFICATION, CITY, STATE, COUNTRY, WEBSITE, ESTABLISHED, GEO_LAT, GEO_LON):
+  def __init__(self, FACILITY_ID, NAME, HANDLE, CLASSIFICATION, COURSE_COUNT, ESTABLISHED, WEBSITE, ADDRESS, CITY, STATE, COUNTRY, GEO_LAT, GEO_LON):
     self.FACILITY_ID = FACILITY_ID
     self.NAME = NAME
-    self.HOLE_COUNT = HOLE_COUNT
+    self.HANDLE = HANDLE
     self.CLASSIFICATION = CLASSIFICATION
+    self.COURSE_COUNT = COURSE_COUNT
+    self.ESTABLISHED = ESTABLISHED
+    self.WEBSITE = WEBSITE
+    self.ADDRESS = ADDRESS
     self.CITY = CITY
     self.STATE = STATE
     self.COUNTRY = COUNTRY
-    self.WEBSITE = WEBSITE
-    self.ESTABLISHED = ESTABLISHED
     self.GEO_LAT = GEO_LAT
     self.GEO_LON = GEO_LON
 
