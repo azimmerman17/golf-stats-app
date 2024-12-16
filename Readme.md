@@ -206,7 +206,7 @@ This table will hold data concerning the holes for each tee
 | RATING_ID | SERIAL | x | x | x | | | | ID for the hole |
 | TEE_ID | INTEGER | | x | | | TEE.TEE_ID | | | ID for the tee the hole is attached |
 | NUMBER | INTEGER | | x | | | | > 0 and <= 18 | Hole Number of the Golf Course
-| YARDS | INTEGER | | | x | | | > 0 and <= 999 | Hole Length (Yards) |
+| YARDS | INTEGER | | x | | | | > 0 and <= 999 | Hole Length (Yards) |
 | METERS | INTEGER | | x | | | | > 0 and <= 999 | Hole Length (Meters) |
 | PAR_MALE | INTEGER | | | | | | >= 3 and <= 6 | Par for male ratings |
 | SI_MALE | INTEGER | | | | | | > 0 and <= 18 | Stroke Index for male ratings |

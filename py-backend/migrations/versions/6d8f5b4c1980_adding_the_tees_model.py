@@ -22,7 +22,7 @@ def upgrade():
     sa.Column('TEE_ID', sa.Integer(), nullable=False),
     sa.Column('COURSE_ID', sa.Integer(), nullable=False),
     sa.Column('NAME', sa.String(), nullable=False),
-    sa.Column('YARDAGE', sa.Integer(), server_default='7200', nullable=False),
+    sa.Column('YARDS', sa.Integer(), server_default='7200', nullable=False),
     sa.Column('METERS', sa.Integer(), server_default='6600', nullable=False),
     sa.Column('HOLE_COUNT', sa.Integer(), server_default='18', nullable=False),
     sa.Column('CREATED_AT', sa.TIMESTAMP(), nullable=False),
@@ -32,7 +32,7 @@ def upgrade():
     sa.PrimaryKeyConstraint('TEE_ID')
     )
     with op.batch_alter_table('tee', schema=None) as batch_op:
-        batch_op.create_check_constraint('CHECK_TEE_YARDS', sa.sql.column('YARDAGE') > 0)
+        batch_op.create_check_constraint('CHECK_TEE_YARDS', sa.sql.column('YARDS') > 0)
         batch_op.create_check_constraint('CHECK_TEE_METERS', sa.sql.column('METERS') > 0)
         batch_op.create_check_constraint('CHECK_TEE_HOLE_COUNT_MIN', sa.sql.column('HOLE_COUNT') > 0)
         batch_op.create_check_constraint('CHECK_TEE_HOLE_COUNT_MAX', sa.sql.column('HOLE_COUNT') <= 18)       

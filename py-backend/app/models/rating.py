@@ -5,7 +5,7 @@ from app.models.tee import TEE
 
 # Model Contains Information for Courses Ratings
 class RATING(db.Model):
-  COURSE_RATING_ID = db.Column(db.Integer, primary_key=True)
+  RATING_ID = db.Column(db.Integer, primary_key=True)
   TEE_ID = db.Column(db.Integer, db.ForeignKey(TEE.TEE_ID))
   NAME = db.Column(db.String, nullable=False)  # FRONT, BACK, FULL, ETC
   HOLE_COUNT = db.Column(db.Integer, db.CheckConstraint('HOLE_COUNT = 9 OR HOLE_COUNT = 18'), server_default='18')
@@ -43,7 +43,8 @@ class RATING(db.Model):
       raise ValueError(f'Invalid Par Value - {value} - PAr Value must be between 27 and 80')
     return value
 
-def __init__(self, COURSE_RATING_ID, TEE_ID, NAME, HOLE_COUNT, GENDER, START_HOLE, COURSE_RATING, SLOPE, PAR, BOGEY_RATING, EFFECTIVE_DATE):
+def __init__(self, RATING_ID, TEE_ID, NAME, HOLE_COUNT, GENDER, START_HOLE, COURSE_RATING, SLOPE, PAR, BOGEY_RATING, EFFECTIVE_DATE):
+  self.RATING_ID = RATING_ID
   self.TEE_ID = TEE_ID
   self.NAME = NAME
   self.HOLE_COUNT = HOLE_COUNT
@@ -56,3 +57,8 @@ def __init__(self, COURSE_RATING_ID, TEE_ID, NAME, HOLE_COUNT, GENDER, START_HOL
   self.EFFECTIVE_DATE = EFFECTIVE_DATE
 
   return self
+
+# list of keys for a SQL insert statement
+rating_keys = ['TEE_ID', 'NAME', 'HOLE_COUNT', 'GENDER', 'START_HOLE', 'COURSE_RATING', 'SLOPE', 'PAR', 'BOGEY_RATING', 'EFFECTIVE_DATE']
+# list of keys that are marked 'Not Null' and do not have a default value
+rating_not_null = ['TEE_ID', 'NAME', 'HOLE_COUNT', 'GENDER', 'START_HOLE', 'COURSE_RATING', 'SLOPE', 'PAR']

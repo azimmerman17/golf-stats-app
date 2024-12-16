@@ -5,11 +5,11 @@ from app.models.tee import TEE
 
 # Model Contains Information for each course hole
 class Hole(db.Model):
-  RATING_ID = db.Column(db.Integer, primary_key=True)
+  HOLE_ID = db.Column(db.Integer, primary_key=True)
   TEE_ID = db.Column(db.Integer, db.ForeignKey(TEE.TEE_ID), nullable=False)
   NUMBER = db.Column(db.Integer, db.CheckConstraint('NUMBER >= 1 AND NUMBER <= 18'), nullable=False)
-  YARDS = db.Column(db.Integer, db.CheckConstraint('YARDS > 0 AND YARDS <= 999'), nullable=False)
-  METERS = db.Column(db.Integer, db.CheckConstraint('METERS > 0 AND METERS <= 999'), nullable=False)
+  YARDS = db.Column(db.Integer, db.CheckConstraint('YARDS > 0 AND YARDS <= 999'), nullable=False, server_default='400')
+  METERS = db.Column(db.Integer, db.CheckConstraint('METERS > 0 AND METERS <= 999'), nullable=False, server_default='367')
   PAR_MALE = db.Column(db.Integer, db.CheckConstraint('PAR_MALE >= 3 AND PAR_MALE <= 6'))
   SI_MALE = db.Column(db.Integer, db.CheckConstraint('SI_MALE >= 1 AND SI_MALE <= 18'))
   PAR_FEMALE = db.Column(db.Integer, db.CheckConstraint('PAR_FEMALE >= 3 AND PAR_FEMALE <= 6'))
@@ -50,8 +50,8 @@ class Hole(db.Model):
         raise ValueError(f'Invalid Stroke Index - {value} - Stroke Index must be between 1 and 18 for a hole')
       return value
 
-def __init__(self, RATING_ID, TEE_ID, NUMBER, YARDS, METERS, PAR_MALE, SI_MALE, PAR_FEMALE, SI_FEMALE, EFFECTIVE_DATE):
-  self.RATING_ID = RATING_ID
+def __init__(self, HOLE_ID, TEE_ID, NUMBER, YARDS, METERS, PAR_MALE, SI_MALE, PAR_FEMALE, SI_FEMALE, EFFECTIVE_DATE):
+  self.HOLE_ID = HOLE_ID
   self.TEE_ID = TEE_ID
   self.NUMBER = NUMBER
   self.YARDS = YARDS
@@ -63,3 +63,8 @@ def __init__(self, RATING_ID, TEE_ID, NUMBER, YARDS, METERS, PAR_MALE, SI_MALE, 
   self.EFFECTIVE_DATE = EFFECTIVE_DATE
 
   return self
+
+# list of keys for a SQL insert statement
+hole_keys = ['TEE_ID', 'NUMBER', 'YARDS', 'METERS', 'PAR_MALE', 'SI_MALE', 'PAR_FEMALE', 'SI_FEMALE']
+# list of keys that are marked 'Not Null' and do not have a default value
+hole_not_null = ['TEE_ID', 'NUMBER']

@@ -8,7 +8,7 @@ class TEE(db.Model):
   TEE_ID = db.Column(db.Integer, primary_key=True)
   COURSE_ID = db.Column(db.Integer, db.ForeignKey(COURSE.COURSE_ID), nullable=False)
   NAME = db.Column(db.String, nullable=False)
-  YARDAGE = db.Column(db.Integer, db.CheckConstraint('YARDAGE > 0'), nullable=False, server_default='7200')
+  YARDS = db.Column(db.Integer, db.CheckConstraint('YARDS > 0'), nullable=False, server_default='7200')
   METERS = db.Column(db.Integer, db.CheckConstraint('METERS > 0'), nullable=False, server_default='6600')
   HOLE_COUNT = db.Column(db.Integer, db.CheckConstraint('HOLE_COUNT >= 1 AND HOLE_COUNT <= 18'), nullable=False, server_default='18')
   CREATED_AT = db.Column(db.TIMESTAMP, nullable=False, default=datetime.now())
@@ -21,7 +21,7 @@ class TEE(db.Model):
       raise ValueError(f'Invalid Hole Count - {value} - Courses must have a hole count between 1 to 18')
     return value
 
-  @orm.validates('YARDAGE')
+  @orm.validates('YARDS')
   def validate_yardage(self, key, value):
     if value < 0:
       raise ValueError(f'Invalid Yardage - {value} - Course must have a positive length')
@@ -33,13 +33,17 @@ class TEE(db.Model):
       raise ValueError(f'Invalid Yardage - {value} - Course must have a length')
     return value
 
-def __init__(self, TEE_ID, COURSE_ID, FACILITY_ID, NAME, YARDAGE, METERS, HOLE_COUNT):
+def __init__(self, TEE_ID, COURSE_ID, NAME, YARDAGE, METERS, HOLE_COUNT):
   self.TEE_ID = TEE_ID
   self.COURSE_ID = COURSE_ID
-  self.FACILITY_ID = FACILITY_ID
   self.NAME = NAME
-  self.YARDAGE = YARDAGE
+  self.YARDS = YARDAGE
   self.METERS = METERS
   self.HOLE_COUNT = HOLE_COUNT
 
   return self
+
+# list of keys for a SQL insert statement
+tee_keys = ['TEE_ID', 'COURSE_ID', 'NAME', 'YARDS', 'METERS', 'HOLE_COUNT']
+# list of keys that are marked 'Not Null' and do not have a default value
+tee_not_null = ['TEE_ID', 'COURSE_ID', 'NAME']

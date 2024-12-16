@@ -25,7 +25,8 @@ def create_app(config_class=Config):
   Migrate(app,hole.db)
 
   # Register Blueprints
-
+  from app.facility import bp as facility_bp
+  app.register_blueprint(facility_bp)
 
   @app.route('/')
   def hello_world():

@@ -43,3 +43,8 @@ def __init__(self, COURSE_ID, FACILITY_ID, NAME, HOLE_COUNT, ESTABLISHED, ARCHIT
   self.ARCHITECT = ARCHITECT
 
   return self
+
+# list of keys for a SQL insert statement
+course_keys = ['COURSE_ID', 'FACILITY_ID', 'NAME', 'HOLE_COUNT', 'ESTABLISHED', 'ARCHITECT']
+# list of keys that are marked 'Not Null' and do not have a default value
+course_not_null = ['COURSE_ID', 'FACILITY_ID']

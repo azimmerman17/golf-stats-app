@@ -7,7 +7,7 @@ orm = db.orm
 
 # DB Engine
 Engine = db.create_engine(
-  Config.SQLALCHEMY_DATABASE_URI
-    ,pool_size=20,
-     max_overflow=5
+  Config.SQLALCHEMY_DATABASE_URI,
+  pool_size=20,
+  max_overflow=5
 )

@@ -62,3 +62,10 @@ class FACILITY(db.Model):
     self.GEO_LON = GEO_LON
 
     return self
+
+# list of keys for a SQL insert statement
+facility_keys = ['FACILITY_ID', 'NAME', 'HANDLE', 'CLASSIFICATION', 'COURSE_COUNT', 'ESTABLISHED', 'WEBSITE', 'ADDRESS', 'CITY', 'STATE', 'COUNTRY', 'GEO_LAT', 'GEO_LON']
+# list of keys that are marked 'Not Null' and do not have a default value
+facility_not_null = ['FACILITY_ID', 'NAME', 'HANDLE']
+
+
