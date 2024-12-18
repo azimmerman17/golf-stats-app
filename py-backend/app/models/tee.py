@@ -33,11 +33,11 @@ class TEE(db.Model):
       raise ValueError(f'Invalid Yardage - {value} - Course must have a length')
     return value
 
-def __init__(self, TEE_ID, COURSE_ID, NAME, YARDAGE, METERS, HOLE_COUNT):
+def __init__(self, TEE_ID, COURSE_ID, NAME, YARDS, METERS, HOLE_COUNT):
   self.TEE_ID = TEE_ID
   self.COURSE_ID = COURSE_ID
   self.NAME = NAME
-  self.YARDS = YARDAGE
+  self.YARDS = YARDS
   self.METERS = METERS
   self.HOLE_COUNT = HOLE_COUNT
 

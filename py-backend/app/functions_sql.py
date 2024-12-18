@@ -7,13 +7,14 @@ def run_query(query):
   conn.begin()
   # run the query
   try:
-    conn.execute(db.text(query))
+    result = conn.execute(db.text(query))
   except Exception as error:
     print('Exception', error)
     conn.rollback()
 
   print('SQL QUERY:', query)
   conn.commit()
+  return result
   
 
 # build a select query

@@ -47,21 +47,23 @@ class FACILITY(db.Model):
     return value
 
   def __init__(self, FACILITY_ID, NAME, HANDLE, CLASSIFICATION, COURSE_COUNT, ESTABLISHED, WEBSITE, ADDRESS, CITY, STATE, COUNTRY, GEO_LAT, GEO_LON):
-    self.FACILITY_ID = FACILITY_ID
-    self.NAME = NAME
-    self.HANDLE = HANDLE
-    self.CLASSIFICATION = CLASSIFICATION
-    self.COURSE_COUNT = COURSE_COUNT
-    self.ESTABLISHED = ESTABLISHED
-    self.WEBSITE = WEBSITE
-    self.ADDRESS = ADDRESS
-    self.CITY = CITY
-    self.STATE = STATE
-    self.COUNTRY = COUNTRY
-    self.GEO_LAT = GEO_LAT
-    self.GEO_LON = GEO_LON
+    self['FACILITY_ID'] = FACILITY_ID
+    self['NAME'] = NAME
+    self['HANDLE'] = HANDLE
+    self['CLASSIFICATION'] = CLASSIFICATION
+    self['COURSE_COUNT'] = COURSE_COUNT
+    self['ESTABLISHED'] = ESTABLISHED
+    self['WEBSITE'] = WEBSITE
+    self['ADDRESS'] = ADDRESS
+    self['CITY'] = CITY
+    self['STATE'] = STATE
+    self['COUNTRY'] = COUNTRY
+    self['GEO_LAT'] = GEO_LAT
+    self['GEO_LON'] = GEO_LON
 
-    return self
+    print('self',self)
+
+    # return self
 
 # list of keys for a SQL insert statement
 facility_keys = ['FACILITY_ID', 'NAME', 'HANDLE', 'CLASSIFICATION', 'COURSE_COUNT', 'ESTABLISHED', 'WEBSITE', 'ADDRESS', 'CITY', 'STATE', 'COUNTRY', 'GEO_LAT', 'GEO_LON']
