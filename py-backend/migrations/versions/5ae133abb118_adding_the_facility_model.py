@@ -22,7 +22,7 @@ def upgrade():
         sa.Column('FACILITY_ID', sa.Integer(), nullable=False),
         sa.Column('NAME', sa.String(length=100), nullable=False),
         sa.Column('HANDLE', sa.String(length=25), nullable=False),
-        sa.Column('CLASSIFICATION', sa.Enum('D', 'P', 'R', 'M', 'O', name='FACILITY_CLASSIFICATION'), server_default='O', nullable=False),
+        sa.Column('CLASSIFICATION', sa.Enum('D', 'P', 'R', 'M','S' 'O', name='FACILITY_CLASSIFICATION'), server_default='O', nullable=False),
         sa.Column('COURSE_COUNT', sa.Integer(), server_default='1', nullable=False),
         sa.Column('ESTABLISHED', sa.Integer(), nullable=True),
         sa.Column('WEBSITE', sa.String(length=100), nullable=True),

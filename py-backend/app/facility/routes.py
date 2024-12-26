@@ -3,7 +3,7 @@ from flask import request
 from markupsafe import escape
 
 from app.facility import bp
-from app.extensions import to_dict
+from app.extensions import to_dict, Engine
 from app.models.facility import facility_keys, facility_not_null 
 from app.models.course import COURSE, course_keys, course_not_null
 from app.models.tee import tee_keys, tee_not_null
@@ -27,19 +27,18 @@ def facility_all(config_class=Config):
     return res
 
 # GET SINGLE FACILITY
-@bp.route('/<handle>', methods=['GET'])
-def facility_one(handle, config_class=Config):
+@bp.route('/<int:id>', methods=['GET'])
+def facility_one(id, config_class=Config):
     if request.method == 'GET':
       facility_select_keys = '"FACILITY_ID", "NAME", "HANDLE", "CLASSIFICATION", "COURSE_COUNT", "ESTABLISHED", "WEBSITE", "ADDRESS", "CITY", "STATE", "COUNTRY", "GEO_LAT", "GEO_LON"'
       facility_query = f"""SELECT {facility_select_keys} FROM FACILITY
-        WHERE "HANDLE" = '{escape(handle)}'
-          OR "FACILITY_ID" = '{escape(handle)}';"""
+        WHERE"FACILITY_ID" = '{escape(id)}';"""
       facility_mapping = run_query(facility_query).mappings().all()
       facility = to_dict(facility_mapping)[0]
 
       course_select_keys = '"COURSE_ID", "FACILITY_ID", "NAME", "HOLE_COUNT", "ESTABLISHED", "ARCHITECT"'
       course_query = f"""SELECT {course_select_keys} FROM COURSE
-        WHERE "FACILITY_ID" = {facility['FACILITY_ID']};"""
+        WHERE "FACILITY_ID" = {escape(id)};"""
 
       course_mapping = run_query(course_query).mappings().all()
       course = to_dict(course_mapping)
@@ -64,7 +63,7 @@ def course_all(config_class=Config):
     return res
 
 # GET SINGLE COURSE
-@bp.route('/course/<id>', methods=['GET'])
+@bp.route('/course/<int:id>', methods=['GET'])
 def course_single(id, config_class=Config):
   # course
   course_select_keys = '"COURSE_ID", "FACILITY_ID", "NAME", "HOLE_COUNT", "ESTABLISHED", "ARCHITECT"'
@@ -128,15 +127,22 @@ def course_single(id, config_class=Config):
 @bp.route('/new', methods=['POST'])
 def facility_insert(config_class=Config):
   if request.method == 'POST':
-    if request.json['GHIN'] == False:
-      print('Create script to translate data from GHIN to load into DB')
-
+    conn = Engine.connect()
+    conn.begin()
+    # define data from request
     data = request.json
+
+    # check if data, is a "data dump" from GHIN and translate is to data that can be uploaded
+    if request.json['GHIN'] == True:
+      from app.facility.functions import translate_ghin
+      data = translate_ghin(data)
+      # return data
+
     # INSERT INTO FACILITY
     # validate the facility data and build query for insert
     facility = validate_insert_data(data['FACILITY'], facility_keys, facility_not_null)
     facility_query = build_insert(facility, facility_keys, 'FACILITY')
-    run_query(facility_query)
+    run_query(facility_query, conn)
 
     # INSERT INTO COURSE
     # Loop for the facility's list of courses
@@ -148,7 +154,7 @@ def facility_insert(config_class=Config):
       # validate the course data and build query for insert
       course = validate_insert_data(course, course_keys, course_not_null)
       course_query = build_insert(course, course_keys, 'COURSE')
-      run_query(course_query)
+      run_query(course_query, conn)
 
       # INSERT INTO TEE
       # Loop for the course's list of tee sets
@@ -160,7 +166,7 @@ def facility_insert(config_class=Config):
         # validate the course data and build query for insert
         tee = validate_insert_data(tee, tee_keys, tee_not_null)
         tee_query = build_insert(tee, tee_keys, 'TEE')
-        run_query(tee_query)
+        run_query(tee_query, conn)
 
         # INSERT INTO RATING
         # Loop for the tee set's list of ratings
@@ -172,7 +178,7 @@ def facility_insert(config_class=Config):
           # validate the rating data and build query for insert
           rating = validate_insert_data(rating, rating_keys, rating_not_null)
           rating_query = build_insert(rating, rating_keys, 'RATING')
-          run_query(rating_query)
+          run_query(rating_query, conn)
       
         # INSERT INTO HOLE
         # Loop for the tee set's list of holes
@@ -184,25 +190,40 @@ def facility_insert(config_class=Config):
           # validate the hole data and build query for insert
           hole = validate_insert_data(hole, hole_keys, hole_not_null)
           hole_query = build_insert(hole, hole_keys, 'HOLE')
-          run_query(hole_query)
+          run_query(hole_query, conn)
 
-    return request.json
+    conn.commit()
+    conn.close()
+
+    return 'Facility Insert Completed'
 
 # SEED FACILITY
 @bp.route('/seed', methods=['POST'])
 def facility_seed(config_class=Config):
   if request.method == 'POST':
-    from app.seeders.course_seed import course_seed
+    conn = Engine.connect()
+    conn.begin()
+    
+    # from app.seeders.course_seed import course_seed as course_seed
+    from app.seeders.course_seed_GHIN import course_seed_GHIN as course_seed
+
+    # check if data, is a "data dump" from GHIN and translate is to data that can be uploaded
+    if course_seed['GHIN'] == True:
+      from app.facility.functions import translate_ghin
+      course_seed = translate_ghin(course_seed)
+      # return course_seed
 
     # INSERT INTO FACILITY
     # validate the facility data and build query for insert
     facility = validate_insert_data(course_seed['FACILITY'], facility_keys, facility_not_null)
     facility_query = build_insert(facility, facility_keys, 'FACILITY')
-    run_query(facility_query)
+    run_query(facility_query, conn)
 
     # INSERT INTO COURSE
     # Loop for the facility's list of courses
+    print(len(course_seed['COURSE']))
     for n in range(len(course_seed['COURSE'])):
+
       # Define course and attach the facility id 
       course = course_seed['COURSE'][n]
       course['FACILITY_ID'] = course_seed['FACILITY']['FACILITY_ID']
@@ -210,7 +231,7 @@ def facility_seed(config_class=Config):
       # validate the course data and build query for insert
       course = validate_insert_data(course, course_keys, course_not_null)
       course_query = build_insert(course, course_keys, 'COURSE')
-      run_query(course_query)
+      run_query(course_query, conn)
 
       # INSERT INTO TEE
       # Loop for the course's list of tee sets
@@ -222,7 +243,7 @@ def facility_seed(config_class=Config):
         # validate the course data and build query for insert
         tee = validate_insert_data(tee, tee_keys, tee_not_null)
         tee_query = build_insert(tee, tee_keys, 'TEE')
-        run_query(tee_query)
+        run_query(tee_query, conn)
 
         # INSERT INTO RATING
         # Loop for the tee set's list of ratings
@@ -234,7 +255,7 @@ def facility_seed(config_class=Config):
           # validate the rating data and build query for insert
           rating = validate_insert_data(rating, rating_keys, rating_not_null)
           rating_query = build_insert(rating, rating_keys, 'RATING')
-          run_query(rating_query)
+          run_query(rating_query, conn)
       
         # INSERT INTO HOLE
         # Loop for the tee set's list of holes
@@ -246,8 +267,11 @@ def facility_seed(config_class=Config):
           # validate the hole data and build query for insert
           hole = validate_insert_data(hole, hole_keys, hole_not_null)
           hole_query = build_insert(hole, hole_keys, 'HOLE')
-          run_query(hole_query)
+          run_query(hole_query, conn)
 
+    conn.commit()
+    conn.close()
+      
     return 'Facility Insert Completed'
 
 

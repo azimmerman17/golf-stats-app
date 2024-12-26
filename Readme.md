@@ -216,9 +216,13 @@ This table will hold data concerning the holes for each tee
 | CREATED_AT | TIMESTAMP | | X | | NOW() | | | Timestamp record was created |
 | UPDATED_AT | TIMESTAMP | | X | | NOW() | | | Timestamp record was last updated |
 
-### End Points
+### Blueprints
 
-End points not yet developed
+Blueprints are  still in development
+
+#### FACILITY
+
+This Blueprint is used to perform CRUD actions for data assoicated with golf facilities and courses. Documentaion of specific Endpoints are being developed.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

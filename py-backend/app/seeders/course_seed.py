@@ -1,5 +1,6 @@
 # LONNIE POOLE GOLF COURSE SEED DATA
 course_seed = {
+  "GHIN": False,
 	"FACILITY": {
 		"FACILITY_ID": 88,
 		"NAME": "Lonnie Poole GC at N.C. State University",

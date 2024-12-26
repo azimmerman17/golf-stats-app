@@ -7,7 +7,7 @@ class FACILITY(db.Model):
   FACILITY_ID = db.Column(db.Integer, primary_key=True, nullable=False, unique=True)
   NAME = db.Column(db.String(100), nullable=False)
   HANDLE = db.Column(db.String(25), nullable=False, unique=True)
-  CLASSIFICATION = db.Column(db.Enum('D','P','R','M','O', name='FACILITY_CLASSIFICATION'), nullable=False, server_default='O')
+  CLASSIFICATION = db.Column(db.Enum('D','P','R','M','S','O', name='FACILITY_CLASSIFICATION'), nullable=False, server_default='O')
   COURSE_COUNT = db.Column(db.Integer, db.CheckConstraint('COURSE_COUNT > 0', name='CHECK_COURSE_COUNT'), nullable=False, server_default='1')
   ESTABLISHED = db.Column(db.Integer, db.CheckConstraint('ESTABLISHED > 1400', name='CHECK_ESTABLISHED_MIN'))
   WEBSITE = db.Column(db.String(100))
