@@ -78,9 +78,16 @@ def validate_insert_data(data, keys, not_null):
   
   return data
 
-
-
 # build an update query
+def build_update(data, table, where=None):
+  values = ''
+  for key in data.keys():
+    values = f"""{values}{', ' if values != '' else ' '}"{key}"='{data[key]}'"""
 
+  query = f"""UPDATE {table}
+    SET {values}
+    {'WHERE' if where != None else ''} {where}"""
+  
+  return query
 
 # build a delete query

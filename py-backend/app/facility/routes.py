@@ -9,7 +9,7 @@ from app.models.course import COURSE, course_keys, course_not_null
 from app.models.tee import tee_keys, tee_not_null
 from app.models.rating import rating_keys, rating_not_null
 from app.models.hole import hole_keys, hole_not_null
-from app.functions_sql import run_query, build_insert, validate_insert_data, check_conn
+from app.functions_sql import run_query, build_insert, validate_insert_data, check_conn, build_update
 from app.facility.functions import translate_ghin
 from config import Config
 
@@ -30,7 +30,7 @@ def facility_all(config_class=Config):
       return 'Error loading the facilities', 500
 
 # GET SINGLE FACILITY, POST NEW COURSE TO EXISTING FACILITY, UPDATE FACILITY DATA
-@bp.route('/<int:id>', methods=['GET', 'POST'])
+@bp.route('/<int:id>', methods=['GET', 'POST', 'PUT'])
 def facility_one(id, config_class=Config):
   if request.method == 'GET':
     facility_select_keys = '"FACILITY_ID", "NAME", "HANDLE", "CLASSIFICATION", "COURSE_COUNT", "ESTABLISHED", "WEBSITE", "ADDRESS", "CITY", "STATE", "COUNTRY", "GEO_LAT", "GEO_LON"'
@@ -136,7 +136,34 @@ def facility_one(id, config_class=Config):
     conn.close()
 
     return 'Course Insert Completed', 201
+  elif request.method == 'PUT':
+    # check if facility exists
+    facility_query = f"""SELECT 'x' FROM FACILITY
+      WHERE "FACILITY_ID" = '{escape(id)}';"""
     
+    try:
+      facility_mapping = run_query(facility_query).mappings().all()
+      facility = to_dict(facility_mapping)
+    except Exception:
+      return 'Error retrieving Facility', 500
+
+    if len(facility) == 0:
+      return 'Facility not found', 404
+    
+    # create connection 
+    conn = Engine.connect()
+    conn.begin()
+
+    where_clause = f'"FACILITY_ID" = {escape(id)}'
+    update_query = build_update(request.json, 'FACILITY', where_clause)
+    run_query(update_query, conn)
+    if check_conn(conn) == 'error':
+      return f'Error updating Facility', 400
+
+    conn.commit()
+    conn.close()
+    return 'Facility successfully updated'
+
 # GET ALL COURSES
 @bp.route('/course', methods=['GET'])
 def course_all(config_class=Config):
