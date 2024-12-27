@@ -24,6 +24,16 @@ def run_query(query, conn=None):
 
   return result
 
+# check if connection is open
+def check_conn(conn):
+  try:
+    conn.info
+  except Exception as error:
+    print(error)
+    return 'error'
+  
+  return 'continue'
+
 
 # build a select query
 
