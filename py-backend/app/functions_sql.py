@@ -45,7 +45,6 @@ def build_insert(data, keys, table):
   i = 0 
   for key in keys:
     if key in ['NAME', 'ADDRESS', 'CITY' 'ARCHITECT']:
-      print(key,  data[key])
       data[key] = data[key].replace("'", "''") if data[key] != None else None
 
     if data[key] is None:

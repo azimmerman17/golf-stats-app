@@ -27,7 +27,7 @@ def upgrade():
     sa.Column('ARCHITECT', sa.String(length=100), nullable=True),
     sa.Column('CREATED_AT', sa.TIMESTAMP(), nullable=False),
     sa.Column('UPDATED_AT', sa.TIMESTAMP(), nullable=False),
-    sa.ForeignKeyConstraint(['FACILITY_ID'], ['facility.FACILITY_ID'], ),
+    sa.ForeignKeyConstraint(['FACILITY_ID'], ['facility.FACILITY_ID'], onupdate="CASCADE", ondelete="CASCADE"),
     sa.PrimaryKeyConstraint('COURSE_ID'),
     sa.UniqueConstraint('COURSE_ID')
     )

@@ -32,7 +32,7 @@ def upgrade():
     sa.Column('EFFECTIVE_DATE', sa.DATE(), nullable=False),
     sa.Column('CREATED_AT', sa.TIMESTAMP(), nullable=False),
     sa.Column('UPDATED_AT', sa.TIMESTAMP(), nullable=False),
-    sa.ForeignKeyConstraint(['TEE_ID'], ['tee.TEE_ID'], ),
+    sa.ForeignKeyConstraint(['TEE_ID'], ['tee.TEE_ID'], onupdate="CASCADE", ondelete="CASCADE"),
     sa.PrimaryKeyConstraint('RATING_ID')
     )
     with op.batch_alter_table('rating', schema=None) as batch_op:

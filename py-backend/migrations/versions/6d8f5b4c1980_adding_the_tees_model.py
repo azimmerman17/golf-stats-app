@@ -28,7 +28,7 @@ def upgrade():
     sa.Column('CREATED_AT', sa.TIMESTAMP(), nullable=False),
     sa.Column('UPDATED_AT', sa.TIMESTAMP(), nullable=False),
     sa.ForeignKeyConstraint(['COURSE_ID'], ['course.COURSE_ID'], ),
-    sa.ForeignKeyConstraint(['FACILITY_ID'], ['facility.FACILITY_ID'], ),
+    sa.ForeignKeyConstraint(['FACILITY_ID'], ['facility.FACILITY_ID'], onupdate="CASCADE", ondelete="CASCADE"),
     sa.PrimaryKeyConstraint('TEE_ID')
     )
     with op.batch_alter_table('tee', schema=None) as batch_op:

@@ -14,6 +14,7 @@ from app.facility.functions import translate_ghin
 from config import Config
 
 
+
 # GET ALL FACILITIES
 @bp.route('/', methods=['GET'])
 def facility_all(config_class=Config):
@@ -29,8 +30,8 @@ def facility_all(config_class=Config):
     except Exception:
       return 'Error loading the facilities', 500
 
-# GET SINGLE FACILITY, POST NEW COURSE TO EXISTING FACILITY, UPDATE FACILITY DATA
-@bp.route('/<int:id>', methods=['GET', 'POST', 'PUT'])
+# GET SINGLE FACILITY, POST NEW COURSE TO EXISTING FACILITY, UPDATE FACILITY DATA, DELETE FACILTY AND ALL ITS CHILD DATA
+@bp.route('/<int:id>', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def facility_one(id, config_class=Config):
   if request.method == 'GET':
     facility_select_keys = '"FACILITY_ID", "NAME", "HANDLE", "CLASSIFICATION", "COURSE_COUNT", "ESTABLISHED", "WEBSITE", "ADDRESS", "CITY", "STATE", "COUNTRY", "GEO_LAT", "GEO_LON"'
@@ -58,12 +59,14 @@ def facility_one(id, config_class=Config):
     facility_query = f"""SELECT * FROM FACILITY
       WHERE "FACILITY_ID" = '{escape(id)}';"""
     
+    # run facility query
     try:
       facility_mapping = run_query(facility_query).mappings().all()
       facility = to_dict(facility_mapping)
     except Exception:
       return 'Error retrieving Facility', 500
 
+    # check if there is data returned in facility query
     if len(facility) == 0:
       return 'Facility not found', 404
     else: 
@@ -141,12 +144,14 @@ def facility_one(id, config_class=Config):
     facility_query = f"""SELECT 'x' FROM FACILITY
       WHERE "FACILITY_ID" = '{escape(id)}';"""
     
+    # run query
     try:
       facility_mapping = run_query(facility_query).mappings().all()
       facility = to_dict(facility_mapping)
     except Exception:
       return 'Error retrieving Facility', 500
 
+    # ensure facility exists
     if len(facility) == 0:
       return 'Facility not found', 404
     
@@ -154,6 +159,7 @@ def facility_one(id, config_class=Config):
     conn = Engine.connect()
     conn.begin()
 
+    # create and run update query
     where_clause = f'"FACILITY_ID" = {escape(id)}'
     update_query = build_update(request.json, 'FACILITY', where_clause)
     run_query(update_query, conn)
@@ -162,7 +168,26 @@ def facility_one(id, config_class=Config):
 
     conn.commit()
     conn.close()
-    return 'Facility successfully updated'
+    return 'Facility successfully updated', 200
+  elif request.method == 'DELETE':
+    # create delete query
+    query = f"""
+    DELETE FROM FACILITY
+	  WHERE "FACILITY_ID" = {escape(id)};
+    """
+
+    conn = Engine.connect()
+    conn.begin()
+
+    # run delete query
+    run_query(query, conn)
+    if check_conn(conn) == 'error':
+      return f'Error deleting facility', 400
+
+    conn.commit()
+    conn.close()
+
+    return 'Facility and all related Course, Tee, Rating, and Hole Data Deleted.'
 
 # GET ALL COURSES
 @bp.route('/course', methods=['GET'])
@@ -181,82 +206,225 @@ def course_all(config_class=Config):
 
     return res, 200
 
-# GET SINGLE COURSE
-@bp.route('/course/<int:id>', methods=['GET'])
+# GET SINGLE COURSE, POST NEW TEE(S) TO EXISTING COURSE, UPDATE COURSE DATA, DELETE COURSE AND ALL ITS CHILD DATA
+@bp.route('/course/<int:id>', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def course_single(id, config_class=Config):
-  # course
-  course_select_keys = '"COURSE_ID", "FACILITY_ID", "NAME", "HOLE_COUNT", "ESTABLISHED", "ARCHITECT"'
-  course_query = f"""SELECT {course_select_keys} FROM COURSE
-    WHERE "COURSE_ID" = {escape(id)};"""
-  try:
-    course_mapping = run_query(course_query).mappings().all()
-    course = to_dict(course_mapping)[0]
-  except Exception:
-    return 'Error retrieving Course', 500
-
-  # facility
-  facility_id = course['FACILITY_ID']
-  facility_select_keys = '"FACILITY_ID", "NAME", "HANDLE", "CLASSIFICATION", "COURSE_COUNT", "ESTABLISHED", "WEBSITE", "ADDRESS", "CITY", "STATE", "COUNTRY", "GEO_LAT", "GEO_LON"'
-  facility_query = f"""SELECT {facility_select_keys} FROM FACILITY
-    WHERE "FACILITY_ID" = '{facility_id}';"""
-
-  try:
-    facility_mapping = run_query(facility_query).mappings().all()
-    facility = to_dict(facility_mapping)[0]
-  except Exception:
-    return 'Error retrieving Course', 500
-
-  #tees
-  tee_select_keys = '"TEE_ID", "COURSE_ID", "NAME", "YARDS", "METERS", "HOLE_COUNT"'
-  tees_query = f"""SELECT {tee_select_keys} FROM TEE
-    WHERE "COURSE_ID" = {escape(id)}
-    ORDER BY "YARDS" DESC;"""
-
-  try:
-    tee_mapping = run_query(tees_query).mappings().all()
-    tees = to_dict(tee_mapping)
-  except Exception:
-    return 'Error retrieving Course', 500
-
-  for tee in tees:
-    tee_id = tee['TEE_ID']
-    # ratings
-    rating_keys = '"RATING_ID", "TEE_ID", "NAME", "HOLE_COUNT", "GENDER", "START_HOLE", "COURSE_RATING", "SLOPE", "PAR", "BOGEY_RATING"'
-    rating_query = f"""SELECT {rating_keys} FROM RATING R
-      WHERE "TEE_ID" = {tee_id}
-        AND R."EFFECTIVE_DATE" = (SELECT MAX(R_1."EFFECTIVE_DATE") FROM  RATING R_1
-          WHERE R."RATING_ID" = R_1."RATING_ID")
-      ORDER BY  "GENDER" DESC, "HOLE_COUNT" DESC, "START_HOLE" ASC;"""
-
+  if request.method == 'GET':
+    course_select_keys = '"COURSE_ID", "FACILITY_ID", "NAME", "HOLE_COUNT", "ESTABLISHED", "ARCHITECT"'
+    course_query = f"""SELECT {course_select_keys} FROM COURSE
+      WHERE "COURSE_ID" = {escape(id)};"""
     try:
-      rating_mapping = run_query(rating_query).mappings().all()
-      rating = to_dict(rating_mapping)
+      course_mapping = run_query(course_query).mappings().all()
+      course = to_dict(course_mapping)[0]
     except Exception:
       return 'Error retrieving Course', 500
 
-    tee['RATING'] = rating
-
-    # holes
-    hole_keys = '"HOLE_ID", "TEE_ID", "NUMBER", "YARDS", "METERS", "PAR_MALE", "SI_MALE", "PAR_FEMALE", "SI_FEMALE"'
-    hole_query = f"""SELECT {hole_keys} FROM HOLE H
-      WHERE "TEE_ID" = {tee_id}
-        AND H."EFFECTIVE_DATE" = (SELECT MAX(H_1."EFFECTIVE_DATE") FROM  HOLE H_1
-          WHERE H."HOLE_ID" = H_1."HOLE_ID")
-      ORDER BY "NUMBER" ASC;"""
+    # facility
+    facility_id = course['FACILITY_ID']
+    facility_select_keys = '"FACILITY_ID", "NAME", "HANDLE", "CLASSIFICATION", "COURSE_COUNT", "ESTABLISHED", "WEBSITE", "ADDRESS", "CITY", "STATE", "COUNTRY", "GEO_LAT", "GEO_LON"'
+    facility_query = f"""SELECT {facility_select_keys} FROM FACILITY
+      WHERE "FACILITY_ID" = '{facility_id}';"""
 
     try:
-      hole_mapping = run_query(hole_query).mappings().all()
-      holes = to_dict(hole_mapping)
+      facility_mapping = run_query(facility_query).mappings().all()
+      facility = to_dict(facility_mapping)[0]
     except Exception:
       return 'Error retrieving Course', 500
 
-    tee['HOLES'] = holes
+    #tees
+    tee_select_keys = '"TEE_ID", "COURSE_ID", "NAME", "YARDS", "METERS", "HOLE_COUNT"'
+    tees_query = f"""SELECT {tee_select_keys} FROM TEE
+      WHERE "COURSE_ID" = {escape(id)}
+      ORDER BY "YARDS" DESC;"""
 
-  return {
-        'FACILITY': facility,
-        'COURSE': course,
-        'TEES': tees
-      }, 200
+    try:
+      tee_mapping = run_query(tees_query).mappings().all()
+      tees = to_dict(tee_mapping)
+    except Exception:
+      return 'Error retrieving Course', 500
+
+    for tee in tees:
+      tee_id = tee['TEE_ID']
+      # ratings
+      rating_select_keys = '"RATING_ID", "TEE_ID", "NAME", "HOLE_COUNT", "GENDER", "START_HOLE", "COURSE_RATING", "SLOPE", "PAR", "BOGEY_RATING"'
+      rating_query = f"""SELECT {rating_select_keys} FROM RATING R
+        WHERE "TEE_ID" = {tee_id}
+          AND R."EFFECTIVE_DATE" = (SELECT MAX(R_1."EFFECTIVE_DATE") FROM  RATING R_1
+            WHERE R."RATING_ID" = R_1."RATING_ID")
+        ORDER BY  "GENDER" DESC, "HOLE_COUNT" DESC, "START_HOLE" ASC;"""
+
+      try:
+        rating_mapping = run_query(rating_query).mappings().all()
+        rating = to_dict(rating_mapping)
+      except Exception:
+        return 'Error retrieving Course', 500
+
+      tee['RATING'] = rating
+
+      # holes
+      hole_select_keys = '"HOLE_ID", "TEE_ID", "NUMBER", "YARDS", "METERS", "PAR_MALE", "SI_MALE", "PAR_FEMALE", "SI_FEMALE"'
+      hole_query = f"""SELECT {hole_select_keys} FROM HOLE H
+        WHERE "TEE_ID" = {tee_id}
+          AND H."EFFECTIVE_DATE" = (SELECT MAX(H_1."EFFECTIVE_DATE") FROM  HOLE H_1
+            WHERE H."HOLE_ID" = H_1."HOLE_ID")
+        ORDER BY "NUMBER" ASC;"""
+
+      try:
+        hole_mapping = run_query(hole_query).mappings().all()
+        holes = to_dict(hole_mapping)
+      except Exception:
+        return 'Error retrieving Course', 500
+
+      tee['HOLES'] = holes
+
+    return {
+          'FACILITY': facility,
+          'COURSE': course,
+          'TEES': tees
+        }, 200
+  elif request.method == 'POST':
+    # check if facility and course exists
+    course_query = f"""SELECT * FROM COURSE
+      WHERE "COURSE_ID" = '{escape(id)}';"""
+      
+    # run course query
+    try:
+      course_mapping = run_query(course_query).mappings().all()
+      course = to_dict(course_mapping)
+    except Exception as error:
+      return 'Error retrieving Course', 500
+
+    if len(course) == 0:
+      return 'Course not found', 404
+    else: 
+      request.json["OVERRIDE"]["COURSE"][0] = {
+        "HOLE_COUNT": course[0]["HOLE_COUNT"],
+			  "ESTABLISHED": course[0]["ESTABLISHED"],
+			  "ARCHITECT": course[0]["ARCHITECT"],
+			  "EFFECTIVE_DATE": request.json["OVERRIDE"]["COURSE"][0]["EFFECTIVE_DATE"]
+      } 
+
+    # move to facility
+    facility_query = f"""SELECT * FROM FACILITY
+      WHERE "FACILITY_ID" = '{course[0]['FACILITY_ID']}';
+    """
+
+    # run facility query
+    try:
+      facility_mapping = run_query(facility_query).mappings().all()
+      facility = to_dict(facility_mapping)
+    except Exception:
+      return 'Error retrieving Facility', 500
+
+    if len(facility) == 0:
+      return 'Facility not found', 404
+    else: 
+      request.json['OVERRIDE']['FACILITY'] = facility[0]
+    
+    # check if data, is a "data dump" from GHIN and translate is to data that can be uploaded
+    if request.json['GHIN'] == True:
+      data = translate_ghin(request.json)
+      course = data['COURSE'][0]
+
+    conn = Engine.connect()
+    conn.begin()
+
+    # INSERT INTO TEE
+    # Loop for the course's list of tee sets
+    for m in range(len(course['TEES'])):
+      # Define tee and attach the course id 
+      tee = course['TEES'][m]
+      tee['COURSE_ID'] = course['COURSE_ID']
+
+      # validate the course data and build query for insert
+      tee = validate_insert_data(tee, tee_keys, tee_not_null)
+      tee_query = build_insert(tee, tee_keys, 'TEE')
+      run_query(tee_query, conn)
+      if check_conn(conn) == 'error':
+        return f'Error creating facility: Error adding data to TEE table - COURSE: {course['NAME']}, TEE: {tee['NAME']}', 400
+
+      # INSERT INTO RATING
+      # Loop for the tee set's list of ratings
+      for o in range(len(tee['RATINGS'])):
+        # Define rating and attach the tee id 
+        rating = tee['RATINGS'][o]
+        rating['TEE_ID'] = tee['TEE_ID']
+
+        # validate the rating data and build query for insert
+        rating = validate_insert_data(rating, rating_keys, rating_not_null)
+        rating_query = build_insert(rating, rating_keys, 'RATING')
+        run_query(rating_query, conn)
+        if check_conn(conn) == 'error':
+          return f'Error creating facility: Error adding data to RATING table - COURSE: {course['NAME']}, TEE: {tee['NAME']}, RATING: {rating['NAME']} - {rating['GENDER']}', 400
+
+    
+      # INSERT INTO HOLE
+      # Loop for the tee set's list of holes
+      for p in range(len(tee['HOLES'])):
+        # Define hole and attach the tee id 
+        hole = tee['HOLES'][p]
+        hole['TEE_ID'] = tee['TEE_ID']
+
+        # validate the hole data and build query for insert
+        hole = validate_insert_data(hole, hole_keys, hole_not_null)
+        hole_query = build_insert(hole, hole_keys, 'HOLE')
+        run_query(hole_query, conn)
+        if check_conn(conn) == 'error':
+          return f'Error creating facility: Error adding data to TEE table - COURSE: {course['NAME']}, TEE: {tee['NAME']}, HOLE: {hole['NUMBER']}', 400
+
+    conn.commit()
+    conn.close()
+
+    return 'Course Insert Completed', 201
+  elif request.method == 'PUT':
+    # check if facility exists
+    course_query = f"""SELECT 'x' FROM COURSE
+      WHERE "COURSE_ID" = '{escape(id)}';"""
+    
+    # run query
+    try:
+      course_mapping = run_query(course_query).mappings().all()
+      course = to_dict(course_mapping)
+    except Exception:
+      return 'Error retrieving Course', 500
+
+    # ensure facility exists
+    if len(course) == 0:
+      return 'Course not found', 404
+    
+    # create connection 
+    conn = Engine.connect()
+    conn.begin()
+
+    # create and run update query
+    where_clause = f'"COURSE_ID" = {escape(id)}'
+    update_query = build_update(request.json, 'COURSE', where_clause)
+    run_query(update_query, conn)
+    if check_conn(conn) == 'error':
+      return f'Error updating Course', 400
+
+    conn.commit()
+    conn.close()
+    return 'Course successfully updated', 200
+  elif request.method == 'DELETE':
+    # create delete query
+    query = f"""
+    DELETE FROM COURSE
+	  WHERE "COURSE_ID" = {escape(id)};
+    """
+
+    conn = Engine.connect()
+    conn.begin()
+
+    # run delete query
+    run_query(query, conn)
+    if check_conn(conn) == 'error':
+      return f'Error deleting course', 400
+
+    conn.commit()
+    conn.close()
+
+    return 'Course and all related Tee, Rating, and Hole Data Deleted.'
 
 # CREATE NEW FACILITY
 @bp.route('/new', methods=['POST'])
@@ -365,7 +533,6 @@ def facility_seed(config_class=Config):
 
     # INSERT INTO COURSE
     # Loop for the facility's list of courses
-    print(len(course_seed['COURSE']))
     for n in range(len(course_seed['COURSE'])):
 
       # Define course and attach the facility id 

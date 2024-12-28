@@ -6,7 +6,7 @@ from app.models.tee import TEE
 # Model Contains Information for Courses Ratings
 class RATING(db.Model):
   RATING_ID = db.Column(db.Integer, primary_key=True)
-  TEE_ID = db.Column(db.Integer, db.ForeignKey(TEE.TEE_ID))
+  TEE_ID = db.Column(db.Integer, db.ForeignKey(TEE.TEE_ID, onupdate="CASCADE", ondelete="CASCADE"))
   NAME = db.Column(db.String, nullable=False)  # FRONT, BACK, FULL, ETC
   HOLE_COUNT = db.Column(db.Integer, db.CheckConstraint('HOLE_COUNT = 9 OR HOLE_COUNT = 18'), server_default='18')
   GENDER = db.Column(db.Enum('M','F', name='COURSE_RATING_GENDER'), nullable=False, server_default='M')

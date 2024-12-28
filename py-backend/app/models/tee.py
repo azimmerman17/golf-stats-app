@@ -6,7 +6,7 @@ from app.models.course import COURSE
 # Model Contains Information for Courses Tees
 class TEE(db.Model):
   TEE_ID = db.Column(db.Integer, primary_key=True)
-  COURSE_ID = db.Column(db.Integer, db.ForeignKey(COURSE.COURSE_ID), nullable=False)
+  COURSE_ID = db.Column(db.Integer, db.ForeignKey(COURSE.COURSE_ID, onupdate="CASCADE", ondelete="CASCADE"), nullable=False)
   NAME = db.Column(db.String, nullable=False)
   YARDS = db.Column(db.Integer, db.CheckConstraint('YARDS > 0'), nullable=False, server_default='7200')
   METERS = db.Column(db.Integer, db.CheckConstraint('METERS > 0'), nullable=False, server_default='6600')

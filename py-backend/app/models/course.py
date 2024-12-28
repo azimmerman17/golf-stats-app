@@ -12,7 +12,7 @@ from app.models.facility import FACILITY
 # Facilities with multiple Courses should have Multiple Course Rows
 class COURSE(db.Model):
   COURSE_ID = db.Column(db.Integer, primary_key=True, nullable=False, unique=True)
-  FACILITY_ID = db.Column(db.Integer, db.ForeignKey(FACILITY.FACILITY_ID), nullable=False)
+  FACILITY_ID = db.Column(db.Integer, db.ForeignKey(FACILITY.FACILITY_ID, onupdate="CASCADE", ondelete="CASCADE"), nullable=False)
   NAME = db.Column(db.String(50))
   HOLE_COUNT = db.Column(db.Integer, db.CheckConstraint('HOLE_CRSE_COUNT >= 1 AND HOLE_COUNT <= 18'), nullable=False, server_default='18')
   ESTABLISHED = db.Column(db.Integer, db.CheckConstraint('ESTABLISHED > 1400', name='CHECK_CRSE_ESTABLISHED_MIN'))

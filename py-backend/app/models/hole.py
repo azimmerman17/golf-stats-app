@@ -6,7 +6,7 @@ from app.models.tee import TEE
 # Model Contains Information for each course hole
 class Hole(db.Model):
   HOLE_ID = db.Column(db.Integer, primary_key=True)
-  TEE_ID = db.Column(db.Integer, db.ForeignKey(TEE.TEE_ID), nullable=False)
+  TEE_ID = db.Column(db.Integer, db.ForeignKey(TEE.TEE_ID, onupdate="CASCADE", ondelete="CASCADE"), nullable=False)
   NUMBER = db.Column(db.Integer, db.CheckConstraint('NUMBER >= 1 AND NUMBER <= 18'), nullable=False)
   YARDS = db.Column(db.Integer, db.CheckConstraint('YARDS > 0 AND YARDS <= 999'), nullable=False, server_default='400')
   METERS = db.Column(db.Integer, db.CheckConstraint('METERS > 0 AND METERS <= 999'), nullable=False, server_default='367')
