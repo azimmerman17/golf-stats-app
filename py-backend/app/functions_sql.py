@@ -16,6 +16,7 @@ def run_query(query, conn=None):
     print('Exception', error)
     conn.rollback()
     conn.close()
+    return error
 
   print('SQL QUERY:', query)
   if flag == 1:

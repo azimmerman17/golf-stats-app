@@ -13,8 +13,6 @@ from app.functions_sql import run_query, build_insert, validate_insert_data, che
 from app.facility.functions import translate_ghin
 from config import Config
 
-
-
 # GET ALL FACILITIES
 @bp.route('/', methods=['GET'])
 def facility_all(config_class=Config):
@@ -220,17 +218,13 @@ def course_single(id, config_class=Config):
       return 'Error retrieving Course', 500
 
     # facility
-    facility_id = course['FACILITY_ID']
-    facility_select_keys = '"FACILITY_ID", "NAME", "HANDLE", "CLASSIFICATION", "COURSE_COUNT", "ESTABLISHED", "WEBSITE", "ADDRESS", "CITY", "STATE", "COUNTRY", "GEO_LAT", "GEO_LON"'
-    facility_query = f"""SELECT {facility_select_keys} FROM FACILITY
-      WHERE "FACILITY_ID" = '{facility_id}';"""
+    facility = facility_one(course['FACILITY_ID'])
 
-    try:
-      facility_mapping = run_query(facility_query).mappings().all()
-      facility = to_dict(facility_mapping)[0]
-    except Exception:
-      return 'Error retrieving Course', 500
-
+    for course in facility[0]['COURSES']:
+      if course['COURSE_ID'] == id:
+        facility[0]['COURSES'] = course
+        break
+    
     #tees
     tee_select_keys = '"TEE_ID", "COURSE_ID", "NAME", "YARDS", "METERS", "HOLE_COUNT"'
     tees_query = f"""SELECT {tee_select_keys} FROM TEE
@@ -278,12 +272,12 @@ def course_single(id, config_class=Config):
       tee['HOLES'] = holes
 
     return {
-          'FACILITY': facility,
-          'COURSE': course,
+          'FACILITY': facility[0]['FACILITY'],
+          'COURSE': facility[0]['COURSES'],
           'TEES': tees
         }, 200
   elif request.method == 'POST':
-    # check if facility and course exists
+    # check if course exists
     course_query = f"""SELECT * FROM COURSE
       WHERE "COURSE_ID" = '{escape(id)}';"""
       
@@ -357,7 +351,6 @@ def course_single(id, config_class=Config):
         if check_conn(conn) == 'error':
           return f'Error creating facility: Error adding data to RATING table - COURSE: {course['NAME']}, TEE: {tee['NAME']}, RATING: {rating['NAME']} - {rating['GENDER']}', 400
 
-    
       # INSERT INTO HOLE
       # Loop for the tee set's list of holes
       for p in range(len(tee['HOLES'])):
@@ -426,7 +419,247 @@ def course_single(id, config_class=Config):
 
     return 'Course and all related Tee, Rating, and Hole Data Deleted.'
 
-# CREATE NEW FACILITY
+# GET SINGLE TEE, POST NEW RATINGS/HOLES TO EXISTING TEE, UPDATE TEE DATA, DELETE TEE AND ALL ITS CHILD DATA
+@bp.route('/tee/<int:id>', methods=['GET', 'POST', 'PUT', 'DELETE'])
+def tee_single(id, config_class=Config):
+  if request.method == 'GET':
+    # SELECT query to get tee info
+    tee_select_query = f"""SELECT * FROM TEE WHERE "TEE_ID" = {escape(id)};"""
+
+    try:
+      tee_mapping = run_query(tee_select_query).mappings().all()
+      tee = to_dict(tee_mapping)[0]
+    except Exception:
+      return 'Error retrieving Course', 500
+
+    course = course_single(tee['COURSE_ID'])
+
+    for tee in course[0]['TEES']:
+      if tee['TEE_ID'] == id:
+        course[0]['TEES'] = tee
+        break
+
+    # return course
+    return {
+          'FACILITY': course[0]['FACILITY'],
+          'COURSE': course[0]['COURSE'],
+          'TEES': course[0]['TEES']
+        }, 200
+  elif request.method == 'POST':
+    # Check if tee exists
+    tee_query = f"""SELECT 'x' FROM TEE
+      WHERE "TEE_ID" = '{escape(id)}';"""
+      
+    # run course query
+    try:
+      tee_mapping = run_query(tee_query).mappings().all()
+      tee = to_dict(tee_mapping)
+    except Exception as error:
+      return 'Error retrieving Course', 500
+
+    if len(tee) == 0:
+      return 'Course not found', 404
+
+    # Translate GHIN JSON to readable JSON
+    if request.json['GHIN'] == True:
+      # write override dicy, to allow GHIN function to run  
+      request.json['OVERRIDE'] = {
+        'FACILITY' : {
+          'COURSE_COUNT': None,  
+          'CLASSIFICATION': None,
+          'CITY': None, 
+          'STATE': None,
+          'COUNTRY': None,
+          'WEBSITE':  None,
+          'ESTABLISHED': None,
+          'HANDLE': None
+		    },
+        'COURSE': [{
+          'HOLE_COUNT': None,
+          'ESTABLISHED': None,
+          'ARCHITECT': None,
+          'EFFECTIVE_DATE': request.json['EFFECTIVE_DATE']
+        }]
+      }
+
+      data = translate_ghin(request.json)
+      tees = data['COURSE'][0]['TEES']
+      
+      # Get tee name
+      for tee_name in tees:
+        if tee_name['TEE_ID'] == id:
+          name = tee_name['NAME']
+          break
+      return tees
+      for tee in tees:
+        if tee['NAME'] == name:
+          conn = Engine.connect()
+          conn.begin()
+          # Loop for the tee set's list of ratings
+          for o in range(len(tee['RATINGS'])):
+            # Define rating and attach the tee id 
+            rating = tee['RATINGS'][o]
+            rating['TEE_ID'] = tee['TEE_ID']
+
+            # validate the rating data and build query for insert
+            rating = validate_insert_data(rating, rating_keys, rating_not_null)
+            rating_query = build_insert(rating, rating_keys, 'RATING')
+            run_query(rating_query, conn)
+            if check_conn(conn) == 'error':
+              return f'Error creating TEE: Error adding data to RATING table - TEE: {tee['NAME']}, RATING: {rating['NAME']} - {rating['GENDER']}', 400
+
+          # INSERT INTO HOLE
+          # Loop for the tee set's list of holes
+          for p in range(len(tee['HOLES'])):
+            # Define hole and attach the tee id 
+            hole = tee['HOLES'][p]
+            hole['TEE_ID'] = tee['TEE_ID']
+
+            # validate the hole data and build query for insert
+            hole = validate_insert_data(hole, hole_keys, hole_not_null)
+            hole_query = build_insert(hole, hole_keys, 'HOLE')
+            run_query(hole_query, conn)
+            if check_conn(conn) == 'error':
+              return f'Error creating TEE: Error adding data to HOLE table -  TEE: {tee['NAME']}, HOLE: {hole['NUMBER']}', 400
+          
+          conn.commit()
+          conn.close()
+          return 'Tee inserted successfully', 201
+  elif request.method == 'PUT':
+    # check if TEE exists
+    tee_query = f"""SELECT 'x' FROM TEE
+      WHERE "TEE_ID" = '{escape(id)}';"""
+    
+    # run query
+    try:
+      tee_mapping = run_query(tee_query).mappings().all()
+      tee = to_dict(tee_mapping)
+    except Exception:
+      return 'Error retrieving Tee', 500
+
+    # ensure facility exists
+    if len(tee) == 0:
+      return 'Tee not found', 404
+    
+    # create connection 
+    conn = Engine.connect()
+    conn.begin()
+
+    # create and run update query
+    where_clause = f'"TEE_ID" = {escape(id)}'
+    update_query = build_update(request.json, 'TEE', where_clause)
+    run_query(update_query, conn)
+    if check_conn(conn) == 'error':
+      return f'Error updating Course', 400
+
+    conn.commit()
+    conn.close()
+    return 'TEE successfully updated', 200
+  elif request.method == 'DELETE': 
+    # create delete query
+    query = f"""
+    DELETE FROM TEE
+	  WHERE "TEE_ID" = {escape(id)};
+    """
+
+    conn = Engine.connect()
+    conn.begin()
+
+    # run delete query
+    run_query(query, conn)
+    if check_conn(conn) == 'error':
+      return f'Error deleting course', 400
+
+    conn.commit()
+    conn.close()
+
+    return 'Tee and all related Rating and Hole Data Deleted.'
+
+# POST A NEW HOLE,
+@bp.route('/hole', methods=['POST'])
+def hole_create(config_class=Config):
+  if request.method == 'POST':
+    hole = request.json
+    # Ensure Tee exists
+    select_query = f"""SELECT 'x' FROM TEE 
+      WHERE "TEE_ID" = {hole['TEE_ID']};"""
+      
+    try:
+      tee_mapping = run_query(select_query).mappings().all()
+      tee = to_dict(tee_mapping)
+    except Exception as error:
+      return 'Error retrieving Course', 500
+
+    if len(tee) == 0:
+      return 'Course not found', 404
+
+    # Add the Hole
+    conn = Engine.connect()
+    conn.begin()
+
+    hole = validate_insert_data(hole, hole_keys, hole_not_null)
+    hole_query = build_insert(hole, hole_keys, 'HOLE')
+    res = run_query(hole_query, conn)
+    print(conn)
+    if check_conn(conn) == 'error':
+      return f'Error creating HOLE: Error adding data to HOLE table - HOLE: {hole['NUMBER']}\n\nError: {res}', 400
+
+    conn.commit()
+    conn.close()
+    return 'Hole inserted successfully', 201
+ 
+# UPDATE OR DELETE A HOLE
+@bp.route('/hole/<int:id>', methods=['PUT', 'DELETE'])      
+def hole_update(id, config_class=Config):
+  if request.method == 'PUT':
+    # check if HOLE exists
+    hole_query = f"""SELECT 'x' FROM HOLE
+      WHERE "HOLE_ID" = '{escape(id)}';"""
+    
+    # run query
+    try:
+      hole_mapping = run_query(hole_query).mappings().all()
+      hole = to_dict(hole_mapping)
+    except Exception:
+      return 'Error retrieving Tee', 500
+
+    # ensure facility exists
+    if len(hole) == 0:
+      return 'Tee not found', 404
+    
+    # create connection 
+    conn = Engine.connect()
+    conn.begin()
+
+    # create and run update query
+    where_clause = f'"HOLE_ID" = {escape(id)}'
+    update_query = build_update(request.json, 'HOLE', where_clause)
+    run_query(update_query, conn)
+    if check_conn(conn) == 'error':
+      return f'Error updating Course', 400
+
+    return update_query
+  elif request.method == 'DELETE': 
+    # create delete query
+    query = f"""
+    DELETE FROM HOLE
+	  WHERE "HOLE_ID" = {escape(id)};
+    """
+
+    conn = Engine.connect()
+    conn.begin()
+
+    # run delete query
+    run_query(query, conn)
+    if check_conn(conn) == 'error':
+      return f'Error deleting course', 400
+
+    conn.commit()
+    conn.close()
+
+    return 'Hole Data Deleted.'
+
+# CREATE NEW FACILITY 
 @bp.route('/new', methods=['POST'])
 def facility_insert(config_class=Config):
   if request.method == 'POST':
