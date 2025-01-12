@@ -575,7 +575,7 @@ def tee_single(id, config_class=Config):
 
     return 'Tee and all related Rating and Hole Data Deleted.'
 
-# POST A NEW HOLE,
+# POST A NEW HOLE
 @bp.route('/hole', methods=['POST'])
 def hole_create(config_class=Config):
   if request.method == 'POST':
@@ -588,10 +588,10 @@ def hole_create(config_class=Config):
       tee_mapping = run_query(select_query).mappings().all()
       tee = to_dict(tee_mapping)
     except Exception as error:
-      return 'Error retrieving Course', 500
+      return 'Error retrieving Tee', 500
 
     if len(tee) == 0:
-      return 'Course not found', 404
+      return 'Tee not found', 404
 
     # Add the Hole
     conn = Engine.connect()
@@ -600,7 +600,7 @@ def hole_create(config_class=Config):
     hole = validate_insert_data(hole, hole_keys, hole_not_null)
     hole_query = build_insert(hole, hole_keys, 'HOLE')
     res = run_query(hole_query, conn)
-    print(conn)
+
     if check_conn(conn) == 'error':
       return f'Error creating HOLE: Error adding data to HOLE table - HOLE: {hole['NUMBER']}\n\nError: {res}', 400
 
@@ -638,7 +638,10 @@ def hole_update(id, config_class=Config):
     if check_conn(conn) == 'error':
       return f'Error updating Course', 400
 
-    return update_query
+    conn.commit()
+    conn.close()
+    
+    return 'Hole successfully updated', 200
   elif request.method == 'DELETE': 
     # create delete query
     query = f"""
@@ -658,6 +661,92 @@ def hole_update(id, config_class=Config):
     conn.close()
 
     return 'Hole Data Deleted.'
+
+# POST A NEW RATING
+@bp.route('/rating', methods=['POST'])
+def rating_create(config_class=Config):
+  if request.method == 'POST':
+    rating = request.json
+    # Ensure Tee exists
+    select_query = f"""SELECT 'x' FROM TEE 
+      WHERE "TEE_ID" = {rating['TEE_ID']};"""
+      
+    try:
+      tee_mapping = run_query(select_query).mappings().all()
+      tee = to_dict(tee_mapping)
+    except Exception as error:
+      return 'Error retrieving Tee', 500
+
+    if len(tee) == 0:
+      return 'Tee not found', 404
+
+    # Add the Hole
+    conn = Engine.connect()
+    conn.begin()
+
+    rating = validate_insert_data(rating, rating_keys, rating_not_null)
+    rating_query = build_insert(rating, rating_keys, 'RATING')
+    res = run_query(rating_query, conn)
+
+    if check_conn(conn) == 'error':
+      return f'Error creating Rating: Error adding data to Rating table - Rating: {rating['NAME']}\n\nError: {res}', 400
+
+    conn.commit()
+    conn.close()
+    return 'Rating inserted successfully', 201
+ 
+# UPDATE OR DELETE A RATING
+@bp.route('/rating/<int:id>', methods=['PUT', 'DELETE'])      
+def Rating_update(id, config_class=Config):
+  if request.method == 'PUT':
+    # check if Rating exists
+    rating_query = f"""SELECT 'x' FROM RATING
+      WHERE "RATING_ID" = '{escape(id)}';"""
+    
+    # run query
+    try:
+      rating_mapping = run_query(rating_query).mappings().all()
+      rating = to_dict(rating_mapping)
+    except Exception:
+      return 'Error retrieving Rating', 500
+
+    # ensure facility exists
+    if len(rating) == 0:
+      return 'Rating not found', 404
+    
+    # create connection 
+    conn = Engine.connect()
+    conn.begin()
+
+    # create and run update query
+    where_clause = f'"RATING_ID" = {escape(id)}'
+    update_query = build_update(request.json, 'RATING', where_clause)
+    run_query(update_query, conn)
+    if check_conn(conn) == 'error':
+      return f'Error updating Course', 400
+
+    conn.commit()
+    conn.close()
+    return 'Rating successfully updated', 200
+  elif request.method == 'DELETE': 
+    # create delete query
+    query = f"""
+    DELETE FROM RATING
+	  WHERE "RATING_ID" = {escape(id)};
+    """
+
+    conn = Engine.connect()
+    conn.begin()
+
+    # run delete query
+    run_query(query, conn)
+    if check_conn(conn) == 'error':
+      return f'Error deleting course', 400
+
+    conn.commit()
+    conn.close()
+
+    return 'Rating Data Deleted.'
 
 # CREATE NEW FACILITY 
 @bp.route('/new', methods=['POST'])
