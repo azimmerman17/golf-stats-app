@@ -3,11 +3,6 @@ from datetime import datetime
 from app.extensions import db, orm
 from app.models.facility import FACILITY
 
-from datetime import datetime
-
-from app.extensions import db, orm
-from app.models.facility import FACILITY
-
 # Model Contains Profile Information for Courses
 # Facilities with multiple Courses should have Multiple Course Rows
 class COURSE(db.Model):

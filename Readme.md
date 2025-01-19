@@ -116,7 +116,7 @@ Frontend development, not started
 
 #### FACILITY
 
-This table will hold data concerning each golf facility with a golf course
+This table will hold data concerning each golf facility with a golf course.  Golf facilities can have multiple courses. 
 
 | NAME | DATA TYPE | UNIQUE | NOT NULL | PRIMARY KEY | DEFAULT | FOREIGN KEY | CONSTRAINTS | DESCRIPTION
 | --- | --- | :-: | :-: | :-: | :-: | :-: | :-: | --- |
@@ -124,7 +124,7 @@ This table will hold data concerning each golf facility with a golf course
 | NAME | VARCHAR(100) | | | X | | | | Name of the facility |
 | HANDLE | VARCHAR(25) | X | X | | | | | Url endpoint for facility |
 | CLASSIFICATION | ENUM | | X | | O | | | Type and access for facility |
-| COURSE_COUNT | INTEGER | | X | | 1 | | >0 | Number of course at the facility |
+| COURSE_COUNT | INTEGER | | X | | 1 | | >0 | Number of courses at the facility |
 | ESTABLISHED | INTEGER | | | | | | >1400 & <=today | Year the facility was opened |
 | WEBSITE | VARCHAR(100) | | | | | | | Facility website |
 | ADDRESS | VARCHAR(100) | | | | | | | Facility mailing address|
@@ -149,28 +149,28 @@ CLASSIFICATION ENUM VALUE CODES
 
 #### COURSE
 
-This table will hold data concerning each golf course
+This table will hold data concerning each golf course.  Courses may only attach to 1 facility, if multiple facilities share a golf course, the course attach to the primary facility.  
 
 | NAME | DATA TYPE | UNIQUE | NOT NULL | PRIMARY KEY | DEFAULT | FOREIGN KEY | CONSTRAINTS | DESCRIPTION
 | --- | --- | :-: | :-: | :-: | :-: | :-: | :-: | --- |
 | COURSE_ID | INTEGER | X | X | X | | | | ID for the course |
-| FACILITY_ID | INTEGER | | X | | | FACILITY.FACILITY_ID | | ID for the facility the course is acctached |
+| FACILITY_ID | INTEGER | | X | | | FACILITY.FACILITY_ID | | ID for the facility the course is attached |
 | NAME | VARCHAR(100) | | | | | | | Name of the course, can be null for courses with 1 course |
 | HOLE_COUNT | INTEGER | | X | | 18 | | >0 & <=18 | Number of holes on the course |
 | ESTABLISHED | INTEGER | | | | | | >1574 & <=today | Year the course was opened |
-| ARCHITECT | VARCHAR(100) | | | | | | | Course Designer |
+| ARCHITECT | VARCHAR(100) | | | | | | | Course Designer(s) |
 | CREATED_AT | TIMESTAMP | | X | | NOW() | | | Timestamp record was created |
 | UPDATED_AT | TIMESTAMP | | X | | NOW() | | | Timestamp record was last updated |
 
 #### TEE
 
-This table will hold data concerning each tee set on golf courses
+This table will hold data concerning each tee set on golf courses.  Tees can only attach to a single course.  
 
 | NAME | DATA TYPE | UNIQUE | NOT NULL | PRIMARY KEY | DEFAULT | FOREIGN KEY | CONSTRAINTS | DESCRIPTION
 | --- | --- | :-: | :-: | :-: | :-: | :-: | :-: | --- |
 | TEE_ID | INTEGER | X | X | X | | | | ID for the tee set |
 | COURSE_ID | INTEGER | | X | | | COURSE.COURSE_ID | |ID for the course the tee is attached |
-| NAME | VARCHAR(100) | | X | | | | | Name of the tee, cannot be null |
+| NAME | VARCHAR(100) | | X | | | | | Name of the tee, cannot be null.  Should be descriptive based on the tee markers presented by the course. |
 | HOLE_COUNT | INTEGER | | X | | 18 | | >0 & <=18 | Number of holes on this tee set |
 | YARDAGE | INTEGER | | X | | 7200 | | >0  | Length of the course from this tee set in yards  |
 | METERS | INTEGER | | X | | 6500 | | >0 | Length of the course from this tee set in meters |
@@ -179,27 +179,31 @@ This table will hold data concerning each tee set on golf courses
 
 #### RATINGS
 
-This table will hold data concerning the ratings for each tee
+This table will hold data concerning the ratings for each tee.  Ratings can only attach to a single tee. Most courses will have 3 ratings (Full 18 holes, first 9 holes, and last 9 holes).  Some courses have routing that lends itself to have unique ratings, these ratings should follow the GHIN rating name and be manually added.
 
 | NAME | DATA TYPE | UNIQUE | NOT NULL | PRIMARY KEY | DEFAULT | FOREIGN KEY | CONSTRAINTS | DESCRIPTION
 | --- | --- | :-: | :-: | :-: | :-: | :-: | :-: | --- |
 | RATING_TEE | INTEGER | X | X | X | | | | ID for the rating |
 | TEE_ID | INTEGER | | X | | | TEE.TEE_ID | |ID for the tee the rating is attached |
-| NAME | VARCHAR(50) | | X | | | | | Name of the rating, cannot be null |
+| NAME | VARCHAR(50) | | X | | | | | Name of the rating, cannot be null.  Most common are Full, Front, and Back. |
 | HOLE_COUNT | INTEGER | | X | | 18 | | =9 OR =18 | Number of holes for this rating |
 | GENDER | ENUM | | X | | 'M' | | | Gender for the rating |
 | START_HOLE | INTEGER | | X | | 1 | | >=1 & <=18 & <=HOLE_COUNT | Number of holes for this rating |
-| COURSE_RATING | FLOAT | | X | | | | >0 | Course Rating for this rating |
-| SLOPE | INTEGER | | X | | | | >=55 & <=155 | Slope Rating for this rating |
-| PAR | INTEGER | | X | | | | >=27 & <=80 | Par for this rating |
-| BOGEY_RATING | FLOAT | | | | | | >0 | Bogey Rating for this rating |
+| COURSE_RATING | FLOAT | | X | | | | >0 | The score a scratch player, with a Handicap Index of 0.0, should achieve on a golf course under normal course and weather conditions |
+| SLOPE | INTEGER | | X | | | | >=55 & <=155 | The relative difficulty of a golf course for players who are not scratch players compared to those who are scratch players |
+| PAR | INTEGER | | X | | | | >=27 & <=80 | The score that an expert player would be expected to achieve on a golf course under normal course and weather conditions |
+| BOGEY_RATING | FLOAT | | | | | | >0 | The score a bogey player, with a Handicap Index of 20.0, should achieve on a golf course under normal course and weather conditions |
 | EFFECTIVE_DATE | DATE | | X | | CURRENT_DATE | | | Date the record is effectively active |
 | CREATED_AT | TIMESTAMP | | X | | NOW() | | | Timestamp record was created |
 | UPDATED_AT | TIMESTAMP | | X | | NOW() | | | Timestamp record was last updated |
 
 #### HOLE
 
-This table will hold data concerning the holes for each tee
+This table will hold data concerning the holes for each tee.  Holes can only attach to a single tee. 
+
+Since golf courses typically have multiple tees, a row of data should be added for each hole from each sets of tees, to account for the differences for the hole for each tee set.  Example: An 18 hole course with 4 sets of tees, should create 72 different hole row.
+
+It is a best practice to have both the Male and Female PAR and SI values for each row.  However, if the tee is not rated for either male or female, there should not be an issue as it is unlikely that scores will be posted from those tees.  If new ratings are added, PAR and SI values should be audited for accuracy.
 
 | NAME | DATA TYPE | UNIQUE | NOT NULL | PRIMARY KEY | DEFAULT | FOREIGN KEY | CONSTRAINTS | DESCRIPTION
 | --- | --- | :-: | :-: | :-: | :-: | :-: | :-: | --- |
@@ -208,13 +212,16 @@ This table will hold data concerning the holes for each tee
 | NUMBER | INTEGER | | x | | | | > 0 and <= 18 | Hole Number of the Golf Course
 | YARDS | INTEGER | | x | | | | > 0 and <= 999 | Hole Length (Yards) |
 | METERS | INTEGER | | x | | | | > 0 and <= 999 | Hole Length (Meters) |
-| PAR_MALE | INTEGER | | | | | | >= 3 and <= 6 | Par for male ratings |
-| SI_MALE | INTEGER | | | | | | > 0 and <= 18 | Stroke Index for male ratings |
-| PAR_FEMALE | INTEGER | | | | | | >= 3 and <= 6 | Par for female ratings |
-| SI_FEMALE | INTEGER | | | | | | > 0 and <= 18 | Stroke Index for female ratings |
+| PAR_MALE | INTEGER | | | | | | >= 3 and <= 6 | The score that an expert male player would be expected to make for a given hole |
+| SI_MALE | INTEGER | | | | | | > 0 and <= 18 | The value assigned to each hole on a golf course to indicate where handicap strokes are given or received for male golfers |
+| PAR_FEMALE | INTEGER | | | | | | >= 3 and <= 6 | The score that an expert male player would be expected to make for a given hole |
+| SI_FEMALE | INTEGER | | | | | | > 0 and <= 18 | The value assigned to each hole on a golf course to indicate where handicap strokes are given or received for female golfers |
 | EFFECTIVE_DATE | DATE | | X | | CURRENT_DATE | | | Date the record is effectively active |
 | CREATED_AT | TIMESTAMP | | X | | NOW() | | | Timestamp record was created |
 | UPDATED_AT | TIMESTAMP | | X | | NOW() | | | Timestamp record was last updated |
+
+
+***For the most accurate golf course and facility related data, consult the USGA, GHIN, and facility websites.***
 
 ### Blueprints
 
