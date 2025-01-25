@@ -63,11 +63,21 @@ class FACILITY(db.Model):
 
     print('self',self)
 
-    # return self
+    return self
 
 # list of keys for a SQL insert statement
 facility_keys = ['FACILITY_ID', 'NAME', 'HANDLE', 'CLASSIFICATION', 'COURSE_COUNT', 'ESTABLISHED', 'WEBSITE', 'ADDRESS', 'CITY', 'STATE', 'COUNTRY', 'GEO_LAT', 'GEO_LON']
 # list of keys that are marked 'Not Null' and do not have a default value
 facility_not_null = ['FACILITY_ID', 'NAME', 'HANDLE']
 
+# function that will validate to inputted home_facility exists 
+def validate_facility(facility):
+  from app.functions_sql import run_query
+  validation_query = f"""SELECT "FACILITY_ID" FROM FACILITY
+    WHERE {f'"FACILITY_ID" = {facility}' if str(facility).isdigit() == True else f'"NAME" LIKE \'{facility.replace("'", "''")}%\''};"""
+  id = run_query(validation_query).mappings().all()
 
+  if len(id) == 1:
+    return f'{id[0]['FACILITY_ID']}'
+  else:
+    return 'ERROR - unable to validate facility'

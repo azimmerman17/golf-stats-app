@@ -907,9 +907,3 @@ def facility_seed(config_class=Config):
       
     return 'Facility Insert Completed', 201
 
-
-
-
-
-
-

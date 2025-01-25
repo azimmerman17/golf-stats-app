@@ -33,8 +33,15 @@ def create_app(config_class=Config):
   from app.facility import bp as facility_bp
   app.register_blueprint(facility_bp)
 
+  from app.user import bp as user_bp
+  app.register_blueprint(user_bp)
+
   @app.route('/')
   def hello_world():
-      return "<p>Hello, World!</p>"
+      return '<p>Hello, World!</p>'
+
+  @app.route('/*')
+  def hello_error():
+      return '<p>Hello, Error!</p>'
 
   return app
