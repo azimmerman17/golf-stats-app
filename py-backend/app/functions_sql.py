@@ -35,6 +35,18 @@ def check_conn(conn):
   
   return 'continue'
 
+# validate a single piece of data
+def validate_query(key, value, table, string=False, user_id=None):
+  from app.extensions import to_dict
+  query = f"""SELECT "{key}" FROM {table}
+    WHERE "{key}" = {f"'{value}'" if string == True else f'{value}'}
+      {f'AND "USER_ID" != {user_id}' if user_id != None else ''};"""
+
+  try:
+    res = run_query(query).mappings().all()
+    return to_dict(res)
+  except Exception:
+    return 'Error'
 
 # build a select query
 
@@ -104,7 +116,8 @@ def build_update(data, table, where=None):
     values = f"""{values}{', ' if values != '' else ' '}"{key}"='{data[key]}'"""
 
   query = f"""UPDATE {table}
-    SET {values}
+    SET "UPDATED_AT" = NOW(),
+      {values}
     {'WHERE' if where != None else ''} {where}"""
   
   return query

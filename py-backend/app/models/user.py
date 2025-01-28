@@ -21,21 +21,23 @@ class USERS(db.Model):
   UPDATED_AT = db.Column(db.TIMESTAMP,nullable=False, default=datetime.now())
 
   def __init__(self, USER_ID, USERNAME, FIRST_NAME, LAST_NAME, EMAIL, USER_GENDER, NATIONALITY, PLAYER_TYPE, UNITS, HOME_FACILITY, DOB):
-    self['USER_ID'] = USER_ID
-    self['USERNAME'] = USERNAME
-    self['FIRST_NAME'] = FIRST_NAME
-    self['LAST_NAME'] = LAST_NAME
-    self['EMAIL'] = EMAIL
-    self['USER_GENDER'] = USER_GENDER
-    self['NATIONALITY'] = NATIONALITY
-    self['PLAYER_TYPE'] = PLAYER_TYPE
-    self['UNITS'] = UNITS
-    self['HOME_FACILITY'] = HOME_FACILITY
-    self['DOB'] = DOB
+    print(USER_ID)
+    self.USER_ID = USER_ID
+    self.USERNAME = USERNAME
+    self.FIRST_NAME = FIRST_NAME
+    self.LAST_NAME = LAST_NAME
+    self.EMAIL = EMAIL
+    self.USER_GENDER = USER_GENDER
+    self.NATIONALITY = NATIONALITY
+    self.PLAYER_TYPE = PLAYER_TYPE
+    self.UNITS = UNITS
+    self.HOME_FACILITY = HOME_FACILITY
+    self.DOB = DOB
 
     print('self',self)
 
-    # return self
+    return self
+
 # list of keys for a SQL insert statement
 user_keys = ['USERNAME', 'FIRST_NAME', 'LAST_NAME', 'EMAIL', 'USER_GENDER', 'NATIONALITY', 'PLAYER_TYPE', 'UNITS', 'HOME_FACILITY', 'DOB']
 # list of keys that are marked 'Not Null' and do not have a default value
