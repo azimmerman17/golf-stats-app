@@ -194,12 +194,23 @@ def user_single(user_id, config_class=Config):
 
     return 'User Data Deleted.'
   
-  # UPDATE
-    # PSSWORD RESET
-
 # ALL USERS FROM A SINGLE FACILITY
+@bp.route('/facility/<int:facility_id>', methods=['GET'])
+def user_at_facility(facility_id, config_class=Config):
+  if request.method == 'GET':
+    select_keys = '"USERNAME", "FIRST_NAME", "LAST_NAME", "USER_GENDER", "PLAYER_TYPE", "NATIONALITY"'
+    query = f"""SELECT {select_keys} FROM USERS
+      WHERE "HOME_FACILITY" = {facility_id}
+      ORDER BY "LAST_NAME", "FIRST_NAME";"""
 
-
+    try:
+      mapping = run_query(query).mappings().all()
+      res = to_dict(mapping)
+      return res, 200
+    except Exception:
+      return 'Error loading all users', 500
+     
 # Authenicate a user for log in
 
+# Reset a password
 
