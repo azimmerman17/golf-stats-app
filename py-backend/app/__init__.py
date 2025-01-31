@@ -1,8 +1,9 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_jwt_extended import JWTManager
 
-from app.extensions import db
+from app.extensions import db, jwt
 from config import Config
 
 # FACILITY MODELS
@@ -29,12 +30,17 @@ def create_app(config_class=Config):
   Migrate(app,user.db)
   Migrate(app,user_auth.db)
 
+  jwt = JWTManager(app)
+
   # Register Blueprints
   from app.facility import bp as facility_bp
   app.register_blueprint(facility_bp)
 
   from app.user import bp as user_bp
   app.register_blueprint(user_bp)
+
+  from app.auth import bp as auth_bp
+  app.register_blueprint(auth_bp)
 
   @app.route('/')
   def hello_world():

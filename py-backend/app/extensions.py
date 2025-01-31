@@ -1,4 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
+from flask_jwt_extended import JWTManager
+
 from config import Config
 
 db = SQLAlchemy()
@@ -11,6 +13,9 @@ Engine = db.create_engine(
   pool_size=20,
   max_overflow=5
 )
+
+## JWT Manager
+jwt = JWTManager()
 
 # function to translate a data map from a db transaction to serialiabe JSON
 def to_dict(data_map):

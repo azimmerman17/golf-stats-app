@@ -209,8 +209,3 @@ def user_at_facility(facility_id, config_class=Config):
       return res, 200
     except Exception:
       return 'Error loading all users', 500
-     
-# Authenicate a user for log in
-
-# Reset a password
-
