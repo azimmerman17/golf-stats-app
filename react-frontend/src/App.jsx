@@ -9,6 +9,7 @@ import viteLogo from '/vite.svg'
 import './App.css'
 
 import NavBar from './Components/NavBar'
+import Footer from './Components/Footer';
 
 function App() {
 
@@ -17,22 +18,13 @@ function App() {
       <Row className='mb-3'> 
         <NavBar />
       </Row>
-      <Row className='p-2 main m-auto'>
+      <Row className='p-2 main m-auto mb-5'>
           Page Content
       </Row>
      
 
       <Row>
-          <Col sm={2}>
-            <a href="https://vite.dev" target="_blank">
-              <img src={viteLogo} className="logo-icon vite" alt="Vite logo" />
-            </a>
-          </Col>
-          <Col sm={2}>
-            <a href="https://react.dev" target="_blank">
-              <img src={reactLogo} className="logo-icon react" alt="React logo" />
-            </a>
-          </Col>
+          <Footer />
       </Row>
     </Container>
 

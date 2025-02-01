@@ -31,7 +31,7 @@ const NavBar = () => {
 
 
   return (
-    <Navbar bg='danger' variant='danger' expand='xxl' className='m-0'>
+    <Navbar bg='danger' variant='danger' sticky="top" expand='xxl' className='m-0'>
       <Container className='mx-3 main' fluid>
         <Navbar.Toggle className='text-white bg-white' aria-controls='basic-navbar-nav' />
         <Navbar.Brand className='text-white' href='/'>

@@ -6,7 +6,10 @@
 .main {
   width: 95%;
   margin-left: auto;
- 
+}
+
+.main-bottom {
+  margin-bottom: 100px;
 }
 
 .logo-icon {
@@ -53,10 +56,10 @@
   }
 } 
 
-/* .card {
+.card {
   padding: 2em;
-} */
+}
 
-/* .read-the-docs {
+.read-the-docs {
   color: #888;
-} */
+}
