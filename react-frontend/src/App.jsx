@@ -1,34 +1,41 @@
 import { useState } from 'react'
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Row';
+
+
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 
+import NavBar from './Components/NavBar'
+
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <Container fluid>
+      <Row className='mb-3'> 
+        <NavBar />
+      </Row>
+      <Row className='p-2 main m-auto'>
+          Page Content
+      </Row>
+     
+
+      <Row>
+          <Col sm={2}>
+            <a href="https://vite.dev" target="_blank">
+              <img src={viteLogo} className="logo-icon vite" alt="Vite logo" />
+            </a>
+          </Col>
+          <Col sm={2}>
+            <a href="https://react.dev" target="_blank">
+              <img src={reactLogo} className="logo-icon react" alt="React logo" />
+            </a>
+          </Col>
+      </Row>
+    </Container>
+
   )
 }
 
