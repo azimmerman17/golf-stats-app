@@ -2,8 +2,9 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
+from flask_cors import CORS
 
-from app.extensions import db, jwt
+from app.extensions import db, jwt, cors
 from config import Config
 
 # FACILITY MODELS
@@ -20,6 +21,8 @@ def create_app(config_class=Config):
 
   # Initialize Flask extensions
   db.init_app(app)
+  jwt = JWTManager(app)
+  cors = CORS(app, resources={r'/*': {'origins': 'http://localhost:5173'}})   
 
   # Migrate Models  
   Migrate(app,facility.db)
@@ -30,7 +33,6 @@ def create_app(config_class=Config):
   Migrate(app,user.db)
   Migrate(app,user_auth.db)
 
-  jwt = JWTManager(app)
 
   # Register Blueprints
   from app.facility import bp as facility_bp
