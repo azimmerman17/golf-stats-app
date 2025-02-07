@@ -8,10 +8,7 @@ import Button from 'react-bootstrap/Button';
 
 import { CurrentPage } from '../Contexts/CurrentPageContext';
 
-import reactLogo from '../assets/react.svg'
-import viteLogo from '/vite.svg'
-
-const Footer = ({ setPage }) => {
+const Footer = () => {
   const { currentPage, setCurrentPage } = useContext(CurrentPage)
 
   return (

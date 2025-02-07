@@ -10,7 +10,7 @@ import { CurrentPage } from '../Contexts/CurrentPageContext';
 
 import Login from './Login';
 
-const NavBar = ({ setPage }) => {
+const NavBar = () => {
   const { currentUser, setCurrentUser } = useContext(CurrentUser) 
   const { currentPage, setCurrentPage } = useContext(CurrentPage)
   const [expanded, setExpanded] = useState(false)

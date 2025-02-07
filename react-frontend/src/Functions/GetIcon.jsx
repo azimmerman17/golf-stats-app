@@ -1,3 +1,11 @@
+import reactLogo from '/react.svg'
+import viteLogo from '/vite.svg'
+import bootstrapLogo from '/bootstrap.svg'
+import flaskLogo from '/flask.svg'
+import pythonLogo from '/python.svg'
+import postgresLogo from '/postgres.svg'
+import SQLAlchemyLogo from '/SQLAlchemy.svg'
+
 import { BsGraphDown } from "react-icons/bs";
 import { GoPersonFill } from "react-icons/go";
 import { IoGolfSharp, IoLogInOutline, IoLogOutOutline } from "react-icons/io5";
@@ -5,8 +13,23 @@ import { FaGear, FaTrophy, FaGolfBallTee } from "react-icons/fa6";
 import { VscGraph } from "react-icons/vsc"
 
 
+
 const GetIcon = (iconName) => {
   switch (iconName) {
+    case 'Vite Logo':
+      return viteLogo
+    case 'React Logo':
+      return reactLogo
+    case 'Bootstrap Logo':
+      return bootstrapLogo
+    case 'Python Logo':
+      return pythonLogo
+    case 'Flask Logo':
+      return flaskLogo
+    case 'PostgreSQL Logo':
+      return postgresLogo
+    case 'SQLAlchemy Logo':
+      return SQLAlchemyLogo
     case 'Rounds':
       return <FaGolfBallTee /> 
     case 'Stats':

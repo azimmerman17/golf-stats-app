@@ -7,12 +7,13 @@ import { CurrentPage } from '../Contexts/CurrentPageContext'
 
 import HomePage from "./HomePage"
 import Login from "./Login"
+import About from './About'
 
 const RenderPage = () => {
   const { currentUser, setCurrentUser } = useContext(CurrentUser)
   const { currentPage, setCurrentPage } = useContext(CurrentPage)
   
-  if (currentPage === 'about') return currentPage
+  if (currentPage === 'about') return <About />
   if (!currentUser) return <Login />
   console.log(currentUser)
 

@@ -10,7 +10,7 @@ import { CurrentPage } from '../Contexts/CurrentPageContext';
 
 
 
-const Login = ({  variant }) => {
+const Login = ({ variant }) => {
   // const BASE_URL = import.meta.env.VITE_BASE_URL
   const BASE_URL = 'http://127.0.0.1:8080'
   const { currentUser, setCurrentUser } = useContext(CurrentUser)
