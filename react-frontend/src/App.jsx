@@ -5,6 +5,7 @@ import Row from 'react-bootstrap/Row';
 import './App.css';
 
 import CurrentUserProvider from './Contexts/CurrentUserContext';
+import CurrentPageProvider from './Contexts/CurrentPageContext';
 
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
@@ -15,31 +16,41 @@ import RenderPage from './Components/RenderPage';
 
 
 const App = () => {
-  const [title, setTitle] = useState('APP')
+  const [title, setTitle] = useState('Golf Statitics App')
   const [page, setPage] = useState('Home')
 
   useEffect(() => {
-    document.title = 'Golf Statitics App'
+    document.title = title
   }, [title])
 
   return (
     <>
-      {/* CONTEXT PROVIDERS */}
-      <CurrentUserProvider>
-        {/* PAGES */}
-        <Container fluid>
-          <Row className='mb-3'> 
-            <NavBar />
-          </Row>
-          <Row className='p-2 main m-auto mb-5'>
-            <RenderPage page={page} setPage={setPage}/>
-          </Row>
-          <Row>
-            <Footer />
-          </Row>
-        </Container>
-        {/* CONTEXT PROVIDERS CLOSE */}
-      </CurrentUserProvider>
+      <Router>
+        {/* CONTEXT PROVIDERS */}
+        <CurrentPageProvider>
+
+          <CurrentUserProvider>
+            {/* PAGES */}
+            <Container fluid>
+              <Row className='mb-3'> 
+                <NavBar setPage={setPage}/>
+              </Row>
+              <Row className='p-2 main m-auto mb-5'>
+                <Routes>
+                  <Route exact path='/' element={<RenderPage page={page} setPage={setPage} />} />
+                  <Route path='/new' element={<newUser />} />
+                  <Route path='/reset' element={<passwordReset />} />
+                </Routes>
+                
+              </Row>
+              <Row>
+                <Footer setPage={setPage}/>
+              </Row>
+            </Container>
+            {/* CONTEXT PROVIDERS CLOSE */}
+          </CurrentUserProvider>
+        </CurrentPageProvider>
+      </Router>
     </>
   )
 }

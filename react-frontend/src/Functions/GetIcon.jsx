@@ -1,7 +1,8 @@
-import { BsGraphUp } from "react-icons/bs";
+import { BsGraphDown } from "react-icons/bs";
 import { GoPersonFill } from "react-icons/go";
 import { IoGolfSharp, IoLogInOutline, IoLogOutOutline } from "react-icons/io5";
 import { FaGear, FaTrophy, FaGolfBallTee } from "react-icons/fa6";
+import { VscGraph } from "react-icons/vsc"
 
 
 const GetIcon = (iconName) => {
@@ -9,7 +10,9 @@ const GetIcon = (iconName) => {
     case 'Rounds':
       return <FaGolfBallTee /> 
     case 'Stats':
-      return <BsGraphUp />
+      return <VscGraph />
+    case 'Handicap':
+      return <BsGraphDown />
     case 'Records':
       return <FaTrophy />
     case 'Courses':

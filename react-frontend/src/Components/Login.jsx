@@ -6,17 +6,23 @@ import Container from 'react-bootstrap/esm/Container';
 import Button from 'react-bootstrap/Button';
 
 import { CurrentUser } from '../Contexts/CurrentUserContext'
+import { CurrentPage } from '../Contexts/CurrentPageContext';
 
-const Login = () => {
+
+
+const Login = ({  variant }) => {
   // const BASE_URL = import.meta.env.VITE_BASE_URL
   const BASE_URL = 'http://127.0.0.1:8080'
   const { currentUser, setCurrentUser } = useContext(CurrentUser)
+  const { currentPage, setCurrentPage } = useContext(CurrentPage)
+
   let [validated, setValidated] = useState(false)
   let [errorMessage, setErrorMessage] = useState(null)
   let [user, setUser] = useState({
     user_name: '',
     password: ''
   })
+  if (!variant) variant = 'danger'
 
   // Handle the Submit
   const handleSubmit = async (e) => {
@@ -49,14 +55,15 @@ const Login = () => {
       setCurrentUser(data.user)
       localStorage.setItem('golf_token', data.access_token)
       setErrorMessage(null)
+      setCurrentPage('Home')
     } else {
       setErrorMessage(data.message)
     }
   };
 
   return (
-    <Container id='log-in-form' style={{minWidth: '300px', width: '75vw' }}>
-      {!errorMessage ? <p style={{minHeight: '30px'}}></p> : <p className='m-2 p-2 bg-danger-subtle border border-danger text-center rounded-pill'>{errorMessage}</p>}
+    <Container id='log-in-form' style={{maxidth: '300px'}}>
+      {!errorMessage ? <p style={{minHeight: '30px'}}></p> : <p className={`m-2 p-2 bg-${variant}-subtle border border-danger text-center rounded-pill`}>{errorMessage}</p>}
       <Form noValidate validated={validated} onSubmit={handleSubmit}>
         <Form.Group className='mb-3 login-form-group' as={Col}  controlId='loginUserNameEmail' onChange={e => setUser({...user, user_name: e.target.value })}>
           <Form.Label>Username or Email Address</Form.Label>
@@ -72,17 +79,17 @@ const Login = () => {
             placeholder='Enter Password' 
             required/>
         </Form.Group>
-        <Button variant='danger' type='submit' disabled={user.password === '' || user.user_name === ''}>
+        <Button variant={variant} type='submit' disabled={user.password === '' || user.user_name === ''}>
           Submit
         </Button>
       </Form>
       <hr />
       <Row>
         <Col>
-          <a href='/newUser' className='text-secondary'>Create Account</a>
+          <a href='/new' className={`text-${variant}`}>Create Account</a>
         </Col>
         <Col>
-          <a href='/forgot-password' className='text-secondary'>Forgot Password</a>
+          <a href='/reset' className={`text-${variant}`}>Forgot Password</a>
         </Col>
       </Row>
     </Container>
