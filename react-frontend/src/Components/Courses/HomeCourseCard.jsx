@@ -1,5 +1,41 @@
-const HomeCourseCard = ({ course_id }) => {
-  return <h6>{course_id}</h6>
+import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
+import FacilityDetails from './FacilityDetails';
+
+
+const HomeCourseCard = ({ facility }) => {
+
+  const cardLink = () => {
+    const { WEBSITE, GEO_LAT, GEO_LON } = facility
+
+    return (
+      <>
+        {facility.WEBSITE ? <Card.Link className='text-start' target='_blank' href={`https://${facility.WEBSITE}`}>COURSE WEBSITE</Card.Link> : null}
+        {facility.GEO_LAT && facility.GEO_LON ? <Card.Link className='text-end' target='_blank' href={`https://www.google.com/maps/place/${facility.GEO_LAT},${facility.GEO_LON}`}>LOCATION</Card.Link> : null }
+      </>
+    )
+
+  }
+
+  return (
+    <Button variant='danger' className='p-1 my-1 text-center shadow-lg' onClick={e => setCurrentPage('Home Course')}>
+      <Card className='m-0 p-0 w-100 h-100'>
+        <Card.Body>
+          <Card.Title className='text-center'>{facility ? facility.NAME : null}</Card.Title>
+          <Card.Subtitle className="mb-2 text-muted"><small>{facility ? 'HOME COURSE' : null}</small></Card.Subtitle>
+          {facility ? <FacilityDetails facility={facility} /> : (
+            <Card.Text>
+              No home course is set, click to set a home course
+            </Card.Text>
+            )
+          }
+          {facility.WEBSITE ? <Card.Link className='text-start' target='_blank' href={`https://${facility.WEBSITE}`}>WEBSITE</Card.Link> : null}
+          {facility.GEO_LAT && facility.GEO_LON ? <Card.Link className='text-end' target='_blank' href={`https://www.google.com/maps/place/${facility.GEO_LAT},${facility.GEO_LON}`}>DIRECTIONS</Card.Link> : null }
+        </Card.Body>
+      </Card>
+    </Button>
+
+  )
 }
 
 export default HomeCourseCard

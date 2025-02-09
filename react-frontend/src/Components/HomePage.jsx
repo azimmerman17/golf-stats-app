@@ -42,10 +42,10 @@ const  HomePage = () => {
         <ProfileHome currentUser={currentUser}/>
       </Row>
       <Row className='my-1 mx-auto'>
-        <Col>
-          <HomeCourseCard course_id={HOME_FACILITY} />
+        <Col className='p-2'>
+          <HomeCourseCard facility={HOME_FACILITY.FACILITY} />
         </Col>
-        <Col> 
+        <Col className='p-2'> 
           <HandicapCard />
         </Col>
       </Row>
