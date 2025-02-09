@@ -15,7 +15,7 @@ const RenderPage = () => {
   
   if (currentPage === 'about') return <About />
   if (!currentUser) return <Login />
-  console.log(currentUser)
+  console.log(currentPage)
 
   switch(currentPage) {  
     case 'Rounds':

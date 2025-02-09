@@ -22,7 +22,6 @@
   filter: drop-shadow(0 0 1em #ee1e1e);
 }
 
-
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -54,7 +53,10 @@
   filter: drop-shadow(0 0 2em #333);
 }
 
-
+.nav-card {
+  width: 125px;
+  height: 125px;
+}
 
 
 

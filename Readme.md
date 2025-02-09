@@ -130,7 +130,7 @@ This table will hold data concerning each golf facility with a golf course.  Gol
 | ADDRESS | VARCHAR(100) | | | | | | | Facility mailing address|
 | CITY | VARCHAR(50) | | | | | | | Facility City |
 | STATE | VARCHAR(3) | | | | | | |State/Providence Code of the facility (USA/Canada Only) |
-| COUNTRY | VARCHAR(3) | | | | | | | Facility 3 letter country code |
+| COUNTRY | VARCHAR(6) | | | | | | | Facility country code, to display the country/state flag|
 | GEO_LAT | FLOAT | | | | | | >-90 & <90 | Factility Latitude Coordinate |
 | GEO_LON | FLOAT | | | | | | >-180 & <180 | Factility Longitude Coordinate |
 | CREATED_AT | TIMESTAMP | | X | | NOW() | | | Timestamp record was created |
@@ -237,7 +237,7 @@ This table stores the user profile and and settings data.
 | GENDER | ENUM |  | x |  | P |  |  | Gender as provided by the user (M, F, N, P) |
 | DOB | DATE |  |  |  |  |  |  | User's Date of Birth |
 | HOME_FACILITY | INTEGER |  |  |  |  | FACILITY.FACILITY_ID |  | The course the user primarlly plays. |
-| NATIONALITY | VARCHAR(3) |  |  |  |  |  |  | The country the user lives |
+| NATIONALITY | VARCHAR(6) |  |  |  |  |  |  | The country the user lives, most will be 2 letter code, GB will have 6, to show the flag |
 | PLAYER_TYPE | EMUN |  |  |  |  |  |  | The user's golfer type (A, C, P, TP)  |
 | UNITS | EMUN |  |  |  |  |  |  | The user's preffered unit of measurement (Y, M)  |
 | ROLE | EMUN |  |  |  |  |  |  | The user's role for access (basic, vip, admin)  |
