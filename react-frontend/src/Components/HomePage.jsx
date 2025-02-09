@@ -12,7 +12,9 @@ import HandicapCard from './Handicap/HandicapCard'
 
 const  HomePage = () => {
   const {currentUser, setCurrentUser} = useContext(CurrentUser)
-  const { HOME_FACILITY } = currentUser
+  const { HOME_FACILITY, HANDICAP } = currentUser
+
+  console.log(currentUser)
 
   const cards = [
     // {title: 'Statistics', icon: 'Stats', page: 'Stats', space: true},
@@ -46,7 +48,7 @@ const  HomePage = () => {
           <HomeCourseCard facility={HOME_FACILITY.FACILITY} />
         </Col>
         <Col className='p-2'> 
-          <HandicapCard />
+          <HandicapCard  handicap={HANDICAP}/>
         </Col>
       </Row>
       <Row className='my-1 mx-auto'>

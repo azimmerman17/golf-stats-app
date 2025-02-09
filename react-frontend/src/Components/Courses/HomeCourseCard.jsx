@@ -1,21 +1,12 @@
+import { useContext } from 'react';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import FacilityDetails from './FacilityDetails';
 
+import { CurrentPage } from '../../Contexts/CurrentPageContext';
 
 const HomeCourseCard = ({ facility }) => {
-
-  const cardLink = () => {
-    const { WEBSITE, GEO_LAT, GEO_LON } = facility
-
-    return (
-      <>
-        {facility.WEBSITE ? <Card.Link className='text-start' target='_blank' href={`https://${facility.WEBSITE}`}>COURSE WEBSITE</Card.Link> : null}
-        {facility.GEO_LAT && facility.GEO_LON ? <Card.Link className='text-end' target='_blank' href={`https://www.google.com/maps/place/${facility.GEO_LAT},${facility.GEO_LON}`}>LOCATION</Card.Link> : null }
-      </>
-    )
-
-  }
+  const {currentPage, setCurrentPage} = useContext(CurrentPage)
 
   return (
     <Button variant='danger' className='p-1 my-1 text-center shadow-lg' onClick={e => setCurrentPage('Home Course')}>
@@ -34,7 +25,6 @@ const HomeCourseCard = ({ facility }) => {
         </Card.Body>
       </Card>
     </Button>
-
   )
 }
 

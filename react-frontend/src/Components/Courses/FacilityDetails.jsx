@@ -8,7 +8,7 @@ import GetFlag from "../../Functions/GetFlag"
 
 const FacilityDetails = ({ facility }) => {
   const { ADDRESS, CITY, CLASSIFICATION, COUNTRY, COURSE_COUNT, ESTABLISHED, STATE } = facility
-  console.log(facility)
+
   return (
     <Container className='text-center' fluid>
       <Row>
