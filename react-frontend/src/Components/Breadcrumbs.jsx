@@ -6,12 +6,12 @@ import { CurrentPage } from '../Contexts/CurrentPageContext';
 const Breadcrumbs = ({ list }) => {
   const { currentPage, setCurrentPage } = useContext(CurrentPage)
   const listItems = list.map((item, i) => {
-    const  { name, change } = item
-    console.log(i, list.length - 1, i === list.length - 1, name)
+    const  { name, change, active } = item
+
     return (
     <Breadcrumb.Item 
       onClick={e => setCurrentPage(change)}
-      active={i === list.length - 1}
+      active={!active}
       key={`breadcrumb-${name}`}
     >
       {name}

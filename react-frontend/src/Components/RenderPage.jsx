@@ -8,6 +8,7 @@ import { CurrentPage } from '../Contexts/CurrentPageContext'
 import HomePage from "./HomePage"
 import Login from "./Login"
 import About from './About'
+import ProfilePage from './Profile/ProfilePage'
 
 const RenderPage = () => {
   const { currentUser, setCurrentUser } = useContext(CurrentUser)
@@ -29,7 +30,7 @@ const RenderPage = () => {
     case 'Courses':
       return currentPage
     case 'Profile':
-      return currentPage
+      return <ProfilePage />
     case 'Logout':
       setCurrentUser(null)
       localStorage.removeItem('golf_token')

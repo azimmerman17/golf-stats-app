@@ -17,7 +17,7 @@ const  HomePage = () => {
 
   console.log(currentUser)
   const breadcrumbList = [
-    {name: 'Home', change: ''}
+    {name: 'Home', change: '', active: false}
   ]
 
   const cards = [
@@ -50,7 +50,7 @@ const  HomePage = () => {
       </Row>
       <Row className='my-1 mx-auto'>
         <Col className='p-2'>
-          <HomeCourseCard facility={HOME_FACILITY.FACILITY} />
+          <HomeCourseCard facility={HOME_FACILITY.FACILITY} active={true} />
         </Col>
         <Col className='p-2'> 
           <HandicapCard  handicap={HANDICAP}/>

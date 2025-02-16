@@ -12,8 +12,8 @@ const About = () => {
   const disclaimer = `Note: The handicap given on the application is not official and it is strongly recommended to consult your local course or handicap organization to track an official handicap.`
 
   const breadcrumbList = [
-    {name: 'Home', change: ''},
-    {name: 'About', change: 'about'}
+    {name: 'Home', change: '', active: true},
+    {name: 'About', change: 'about', active: false}
   ]
 
 
