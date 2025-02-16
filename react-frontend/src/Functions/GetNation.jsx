@@ -1,9 +1,11 @@
-const GetNation = async (code) => {
-  let res = await fetch('https://flagcdn.com/en/codes.json')
-  let data = await res.json()
+import { useContext } from "react"
 
-  return data[code]
-  
+import { NationList } from "../Contexts/NationListContext"
+
+const GetNation = (code) => {
+  const { nations, setNations } = useContext(NationList)
+
+  return nations[code]  
 }
 
 export default GetNation

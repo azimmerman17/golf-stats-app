@@ -56,6 +56,7 @@ const Login = ({ variant }) => {
       localStorage.setItem('golf_token', data.access_token)
       setErrorMessage(null)
       setCurrentPage('Home')
+      location.reload()
     } else {
       setErrorMessage(data.message)
     }

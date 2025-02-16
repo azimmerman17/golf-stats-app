@@ -1,11 +1,14 @@
 from flask import request
 from markupsafe import escape
+from flask_jwt_extended import create_access_token
 
 from app.user import bp
 from app.user.functions import verify_user, validate_user_update
 from app.extensions import to_dict, Engine
 from app.functions_sql import run_query, build_insert, validate_insert_data, check_conn, build_update, validate_query
 from app.functions.functions_auth import hash_value, generate_salt, encrypt_data
+from app.auth.functions import authenicate_user, build_authed_user
+
 from app.models.user import USERS, user_keys, user_not_null
 from app.models.user_auth import USER_AUTH, auth_keys
 from app.models.facility import validate_facility 
@@ -16,7 +19,7 @@ from config import Config
 @bp.route('/', methods=['GET', 'POST'])
 def users_all(config_class=Config):
   if request.method == 'GET':
-    select_keys = '"USERNAME", "FIRST_NAME", "LAST_NAME", "USER_GENDER", "PLAYER_TYPE", "NATIONALITY"'
+    select_keys = '"USERNAME", "FIRST_NAME", "LAST_NAME", "EMAIL", "USER_GENDER", "PLAYER_TYPE", "NATIONALITY"'
     query = f"""SELECT {select_keys} FROM USERS
       ORDER BY "LAST_NAME", "FIRST_NAME";"""
 
@@ -32,6 +35,7 @@ def users_all(config_class=Config):
 
     # define data from request
     data = request.json
+    print(data)
 
     # verify a new user
     user_new = verify_user(data['USERNAME'], data['EMAIL'])
@@ -70,7 +74,12 @@ def users_all(config_class=Config):
     conn.commit()
     conn.close()
 
-    return 'User successfully Added'
+    access_token = create_access_token(identity=user_id)
+    user = build_authed_user(user_id)
+    print(user)
+
+    return {'message': 'User Successfully Created', 'access_token': access_token, 'user': user[0]}, 201
+
 
 # SINGLE USER - GET a single User, POST an updated password record UPDATE user profile information, or DELETE a user
 @bp.route('/<int:user_id>', methods=['GET', 'POST', 'PUT', 'DELETE'])
