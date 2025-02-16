@@ -9,12 +9,16 @@ import NavCards from './NavCards'
 import ProfileHome from './Profile/ProfileHome'
 import HomeCourseCard from './Courses/HomeCourseCard'
 import HandicapCard from './Handicap/HandicapCard'
+import Breadcrumbs from './Breadcrumbs'
 
 const  HomePage = () => {
   const {currentUser, setCurrentUser} = useContext(CurrentUser)
   const { HOME_FACILITY, HANDICAP } = currentUser
 
   console.log(currentUser)
+  const breadcrumbList = [
+    {name: 'Home', change: ''}
+  ]
 
   const cards = [
     // {title: 'Statistics', icon: 'Stats', page: 'Stats', space: true},
@@ -40,6 +44,7 @@ const  HomePage = () => {
 
   return (
     <Container fluid>
+      <Breadcrumbs list={breadcrumbList}></Breadcrumbs>
       <Row className='my-1 mx-auto'>
         <ProfileHome currentUser={currentUser}/>
       </Row>

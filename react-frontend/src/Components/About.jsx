@@ -2,7 +2,7 @@ import Container from "react-bootstrap/Container"
 import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
 import Image from 'react-bootstrap/Image'
-import { BsBootstrap } from "react-icons/bs"
+import Breadcrumbs from "./Breadcrumbs"
 import modules from "../assets/builtWith"
 import GetIcon from "../Functions/getIcon"
 
@@ -10,12 +10,14 @@ const About = () => {
   // message
   const message = `This application will allow golfers to record and track statistics and playing handicaps.  Over time we will continue to evolve to provide new features and more advanced statistics to allow golfers to play and practice better.`
   const disclaimer = `Note: The handicap given on the application is not official and it is strongly recommended to consult your local course or handicap organization to track an official handicap.`
-  // built with modules
-  // let frontend = ['vite', 'react', 'bootstrap']
-  let backend = ['python', 'flask', 'postgreSQL']
+
+  const breadcrumbList = [
+    {name: 'Home', change: ''},
+    {name: 'About', change: 'about'}
+  ]
+
 
   const displayModules = (s) => {
-    
     return(
       modules.map(mod => {
         const {url, alt, server, module } = mod
@@ -34,6 +36,7 @@ const About = () => {
 
   return (
     <div>
+      <Breadcrumbs list={breadcrumbList}></Breadcrumbs>
       <h2 className='text-center my-2'>About the GOLF STATS APP</h2>
       <p className='pt-2'>{message}</p>
       <br/>
