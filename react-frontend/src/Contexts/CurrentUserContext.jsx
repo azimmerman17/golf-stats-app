@@ -1,6 +1,9 @@
 // context for the current user
 import { useEffect, createContext, useState } from 'react';
 
+import GetNation from '../Functions/GetNation';
+import GetHomeFacility from '../Functions/GetHomeFacility';
+
 export const CurrentUser = createContext()
 
 const CurrentUserProvider = ({ children }) => {
@@ -9,14 +12,6 @@ const CurrentUserProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null)
 
   useEffect(() => {
-    const getHomeFacility = async (id) => {
-      let response = await fetch(BASE_URL + `/facility/${id}`)
-      let course = await response.json()
-
-      if (course) return course
-      else return null
-    }
-
     const getLoggedInUser = async () => {
       const options = {
         method: 'POST',
@@ -28,10 +23,15 @@ const CurrentUserProvider = ({ children }) => {
 
       let response = await fetch(BASE_URL + '/auth/user', options)
       let user = await response.json()
+
       if (response.status === 200) {    
         if (user.HOME_FACILITY) {
-          user.HOME_FACILITY =  await getHomeFacility(user.HOME_FACILITY)
+          user.HOME_FACILITY =  await GetHomeFacility(user.HOME_FACILITY)
         }
+        if (user.NATIONALITY) {
+          user.NATION = await GetNation(user.NATIONALITY)
+        }
+
         setCurrentUser(user)
       }
     }

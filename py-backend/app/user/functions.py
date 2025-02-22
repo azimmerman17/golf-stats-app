@@ -23,7 +23,8 @@ def validate_user_update(data, user_id):
       if res == [] or res == 'Error':
         return {'Error': 'The home facility does not exists'}
     elif key == 'DOB':
-      if datetime.strptime(data[key], '%m-%d-%Y').date() > datetime.now().date():
+      new_date = data[key].split(',')[0]
+      if datetime.strptime(new_date, '%m/%d/%Y').date() > datetime.now().date():
         return {'Error': 'Invalid Date of Birth, it cannot be future dated'}
     elif (key == "PLAYER_TYPE" and data[key] not in ['A','C','P','TP']) or (key == "USER_GENDER" and data[key] not in ['M','F','N','P']) or (key == "UNITS" and data[key] not in ['M','Y']):
       return  {'Error': f'Invalid value for {key}'}

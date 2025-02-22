@@ -8,19 +8,7 @@ import GetPlayerType from "../../Functions/GetPlayerType"
 import GetGender from "../../Functions/GetGender"
 
 const ProfileInfoCard = ({ currentUser }) => {
-  const { DOB, ROLE, UNITS, USER_GENDER,  EMAIL, NATIONALITY, PLAYER_TYPE, USERNAME} = currentUser
-  let [nation, setNation] = useState(null)
-
-  useEffect(() => {
-    const getNation = async (code) => {
-      let res = await fetch('https://flagcdn.com/en/codes.json')
-      let data = await res.json()
-    
-      setNation(data[code])
-    }
-
-    if (!nation) getNation(NATIONALITY.toLowerCase())
-  }, [nation])
+  const { DOB, ROLE, UNITS, USER_GENDER,  EMAIL, NATIONALITY, PLAYER_TYPE, USERNAME, NATION} = currentUser
 
   return (
     <Card className='mx-auto my-1 p-2 border border-5 border-danger rounded-3 shadow-lg '>
@@ -43,7 +31,7 @@ const ProfileInfoCard = ({ currentUser }) => {
             <p className='text-muted'><small>DATE OF BIRTH</small></p>
           </Col>
           <Col sm={6} className='text-center'>
-            <h6>{nation} {GetFlag(NATIONALITY, 20, 15)}</h6>
+            <h6>{NATION} {GetFlag(NATIONALITY, 20, 15)}</h6>
             <p className='text-muted'><small>NATIONALITY</small></p>
           </Col>
           <Col sm={6} className='text-center'>

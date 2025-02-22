@@ -43,7 +43,7 @@ const NavBar = () => {
 
 
   return (
-    <Navbar bg='danger' variant='danger' sticky="top" expand='xxl' className='m-0' expanded={expanded}>
+    <Navbar bg='danger' variant='danger' sticky="top" expand='xxxl' className='m-0' expanded={expanded}>
       <Container className='mx-3 main' fluid>
         <Navbar.Toggle className='text-white bg-white' aria-controls='basic-navbar-nav' onClick={() => setExpanded(!expanded)}/>
         <Navbar.Brand className='text-white' href='/'>

@@ -12,26 +12,23 @@ import Breadcrumbs from '../Breadcrumbs';
 import ProfileHome from './ProfileHome';
 import HomeCourseCard from '../Courses/HomeCourseCard';
 import ProfileInfoCard from './ProfileInfoCard';
+import ProfileEdit from './ProfileEdit';
 
 const ProfilePage = () => {
   const {currentUser, setCurrentUser} = useContext(CurrentUser)
   const {currentPage, setCurrentPage} = useContext(CurrentPage)
+  const [showEdit, setShowEdit] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
 
   const breadcrumbList = [
     {name: 'Home', change: '', active: true},
     {name: 'Profile', change: 'profile', active: false}
   ]
 
-
-// DOB"Thu, 17 Mar 1994 00:00:00 GMT"
-// HOME_FACILITY{COURSES: Array(1), FACILITY: {…}}
-// ROLE"basic"
-// UNITS"Y"
-// USER_GENDER"M"
-
   return (
     <div>
       <Breadcrumbs list={breadcrumbList} />
+      <ProfileEdit showEdit={showEdit} setShowEdit={setShowEdit} currentUser={currentUser} setCurrentUser={setCurrentUser} />
       <ProfileHome />
       <Row>
         <Col md={6} className='text-center mb-4'>
@@ -45,7 +42,7 @@ const ProfilePage = () => {
         <Col md={6}>
           <ProfileInfoCard currentUser={currentUser} />
           <Row className='text-end mx-2'>
-            <Button variant='warning' className='my-1' onClick={e => console.log('EDIT')}>
+            <Button variant='warning' className='my-1' onClick={e => setShowEdit(true)}>
               <FaEdit />
             </Button>
             <Button variant='danger' className='text-light my-1' onClick={e => console.log('DELETE')}>

@@ -59,30 +59,29 @@ const NewUser = () => {
   // Handle the Submit
   const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log(user)
+    // console.log(user)
 
     setValidated(true);
     // now submit the form
-      const options = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(user)
-      }
-      
-      let response = await fetch(BASE_URL + '/user/', options)
-      let data = await response.json()
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(user)
+    }
+    
+    let response = await fetch(BASE_URL + '/user/', options)
+    let data = await response.json()
 
-      if (response.status === 201) {
-        localStorage.setItem('golf_token', data.access_token)
-        setErrorMessage(null)
-        navigate('/')
-        location.reload()
-      } else {
-        setErrorMessage('Account Creation Failed')
-      }
-    // }
+    if (response.status === 201) {
+      localStorage.setItem('golf_token', data.access_token)
+      setErrorMessage(null)
+      navigate('/')
+      location.reload()
+    } else {
+      setErrorMessage('Account Creation Failed')
+    }
   };
 
   return (
@@ -138,7 +137,7 @@ const NewUser = () => {
               isInvalid={!emailUnique}
               maxLength={30} />
             <Form.Control.Feedback type='invalid'>
-            {usernameUnique === false ? 'Email not available' : ' Please provide a valid email'}
+            {emailUnique === false ? 'Email not available' : ' Please provide a valid email'}
             </Form.Control.Feedback>
           </Form.Group>
           <Form.Group as={Col} md={6} controlId='newUserPasword' className='mb-3' onChange={(e) => setUser({ ...user, PASSWORD: e.target.value})}>
@@ -223,13 +222,13 @@ const NewUser = () => {
             <div className='m-0 p-0'>
               <DatePicker 
                 className='form-select'
-                onChange={(date) => setUser({ ...user,  DOB: date})}
+                onChange={(date) => setUser({ ...user,  DOB: new Date(e.target.value).toLocaleDateString()})}
                 selected={user.DOB}
                 maxDate={new Date()}
                 showMonthDropdown
                 showYearDropdown
                 dropdownMode="select"
-                onChangeRaw={(e) => setUser({ ...user,  DOB: new Date(e.target.value)})}
+                onChangeRaw={(e) => setUser({ ...user,  DOB: new Date(e.target.value).toLocaleDateString()})}
               />
             </div>
           </Form.Group>

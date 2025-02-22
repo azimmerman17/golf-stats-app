@@ -11,20 +11,8 @@ import GetFlag from '../../Functions/GetFlag';
 
 const ProfileHome = () => {
   const {currentUser, setCurrentUser} = useContext(CurrentUser)
-  let [nation, setNation] = useState(null)
 
-  useEffect(() => {
-    const getNation = async (code) => {
-      let res = await fetch('https://flagcdn.com/en/codes.json')
-      let data = await res.json()
-    
-      setNation(data[code])
-    }
-
-    if (!nation) getNation(NATIONALITY.toLowerCase())
-  }, [nation])
-
-  const { EMAIL, FIRST_NAME, LAST_NAME, NATIONALITY, PLAYER_TYPE, USERNAME, USER_GENDER } = currentUser
+  const { EMAIL, FIRST_NAME, LAST_NAME, NATIONALITY, PLAYER_TYPE, USERNAME, USER_GENDER, NATION } = currentUser
 
   return (
     <Card className='mx-auto my-1 p-2 border border-5 border-danger rounded-3 shadow-lg '>
@@ -37,7 +25,7 @@ const ProfileHome = () => {
               <p className='text-muted'><small>EMAIL</small></p>
             </Col>
             <Col sm={6} className='text-center'>
-              <h6>{nation} {GetFlag(NATIONALITY, 20, 15)}</h6>
+              <h6>{NATION} {GetFlag(NATIONALITY, 20, 15)}</h6>
               <p className='text-muted'><small>NATIONALITY</small></p>
             </Col>
             <Col sm={6} className='text-center'>

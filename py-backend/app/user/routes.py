@@ -1,6 +1,8 @@
 from flask import request
 from markupsafe import escape
 from flask_jwt_extended import create_access_token
+from datetime import datetime, date, timedelta
+
 
 from app.user import bp
 from app.user.functions import verify_user, validate_user_update
@@ -153,12 +155,16 @@ def user_single(user_id, config_class=Config):
 
     return 'Password Successfully updated', 200
   elif request.method == 'PUT':
+    if request.json == {}:
+      print('No Data')
+      return {'message': 'No Data to Update'}, 400
+
     # validate user
     res = validate_query('USER_ID', user_id, 'USERS')
     if res == 'Error':
-      return 'Error retrieving User', 500
+      return {'message': 'Error retrieving User'},  500
     if len(res) != 1:
-      return 'User not found', 404
+            return {'message': 'User not found'},  404
 
     # validate data for update
     data = validate_user_update(request.json, user_id)
@@ -177,12 +183,14 @@ def user_single(user_id, config_class=Config):
     update_query = build_update(request.json, 'USERS', where_clause)
     run_query(update_query, conn)
     if check_conn(conn) == 'error':
-      return f'Error updating User', 400
+      return {'message': 'Error updating User'}, 400
 
     conn.commit()
     conn.close()
 
-    return 'User updated successfully', 200
+    user = build_authed_user(user_id)
+
+    return {'message': 'User updated successfully', 'user': user[0]}, 200
   elif request.method == 'DELETE':
     # create delete query
     query = f"""
