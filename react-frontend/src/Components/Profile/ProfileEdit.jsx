@@ -1,4 +1,5 @@
 import { useState, useContext, useEffect } from 'react';
+import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
@@ -24,6 +25,8 @@ const ProfileEdit = ({ showEdit, setShowEdit, currentUser, setCurrentUser }) => 
   const [usernameUnique, setUsernameUnique] = useState(false)
   const [emailUnique, setEmailUnique] = useState(false)
   const [errorMessage, setErrorMessage] = useState(null)
+  const [editPassword, setEditPassword] = useState({PASSWORD: '', PASSWORD_CONFIRM: ''})
+  const [errorPwMessage, setPwErrorMessage] = useState(null)
   let [validated, setValidated] = useState(false)
 
   // const BASE_URL = import.meta.env.VITE_BASE_URL
@@ -41,31 +44,29 @@ const ProfileEdit = ({ showEdit, setShowEdit, currentUser, setCurrentUser }) => 
   } 
 
   // submit the form
-  const handleSubmit = async (e) => {
-    
+  const handleSubmit = async (e, form) => {
     e.preventDefault()
     setValidated(true)
 
-    const options = {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(editUser)
-    }
+    let options = {headers: {'Content-Type': 'application/json'}}
+    { form === 'profile' ? options = {...options, method: 'PUT', body: JSON.stringify(editUser)} : options = {...options, method: 'POST', body: JSON.stringify(editPassword)} }
     
     let response = await fetch(BASE_URL + '/user/' + currentUser.USER_ID, options)
     let data = await response.json()
 
-    if (response.status >= 400) {
-      setErrorMessage(data.message)
-    } else {
-      setErrorMessage('Profile successfully updated')
-      const { user } = data
-      user.HOME_FACILITY = await GetHomeFacility(user.HOME_FACILITY)
-      user.NATION = await GetNation(user.NATIONALITY)
-      setCurrentUser(user)
-      setEditUser({})
+    if (response.status >= 400) { form === 'profile' ? setErrorMessage(data.message) : setPwErrorMessage(data.message) }
+    else {
+      if (form === 'profile') {
+        setErrorMessage('Profile successfully updated')
+        const { user } = data
+        user.HOME_FACILITY = await GetHomeFacility(user.HOME_FACILITY)
+        user.NATION = await GetNation(user.NATIONALITY)
+        setCurrentUser(user)
+        setEditUser({})
+      } else {
+        setPwErrorMessage('Password successfully updated')
+        setEditPassword({PASSWORD: '', PASSWORD_CONFIRM: ''})
+      }
     }
   }
 
@@ -75,7 +76,7 @@ const ProfileEdit = ({ showEdit, setShowEdit, currentUser, setCurrentUser }) => 
       <Offcanvas.Title className='fs-3 m-auto'>Edit Profile Data</Offcanvas.Title>
     </Offcanvas.Header>
     <Offcanvas.Body className='m-2 shadow rounded bg-white'>
-      <Form noValidate validated={validated} onSubmit={(e) => handleSubmit(e)}>
+      <Form noValidate validated={validated} onSubmit={(e) => handleSubmit(e, 'profile')}>
         <Form.Group controlId='editUserFirstName' className='mb-2' onChange={(e) => setEditUser({ ...editUser, FIRST_NAME: e.target.value})}>
           <Form.Label>First name</Form.Label>
           <Form.Control
@@ -184,11 +185,44 @@ const ProfileEdit = ({ showEdit, setShowEdit, currentUser, setCurrentUser }) => 
           </div>
         </Form.Group>
         <Button type='submit' disabled={usernameUnique || emailUnique}>
-          Save Changes
+          SAVE CHANGES
         </Button>
       </Form>
       <p className='text-center rounded border-danger bg-danger-subtle m-2'> 
         {!errorMessage ? null : errorMessage }
+      </p>
+
+      <h3>Update Password</h3>
+      <Form noValidate validated={validated} onSubmit={(e) => handleSubmit(e, 'password')}>
+        <Form.Group controlId='editUserPasword' className='mb-2' onChange={(e) => setEditPassword({ ...editPassword, PASSWORD: e.target.value})}>
+          <Form.Label>New Password</Form.Label>
+          <Form.Control 
+            type='password'
+            placeholder='Enter New Password'
+            required 
+            minLength={6}
+            maxLength={32}/>
+          <Form.Control.Feedback type='invalid'>
+            {editPassword.PASSWORD.length < 6 || editPassword.PASSWORD.length > 32 ? 'Password is too long/short' : 'Please provide a password'}
+          </Form.Control.Feedback>
+          </Form.Group>
+        <Form.Group controlId='editUserPaswordConfirm' className='mb-2' onChange={(e) => setEditPassword({ ...editPassword, PASSWORD_CONFIRM: e.target.value})}>
+          <Form.Label>Confirm New Password</Form.Label>
+          <Form.Control 
+            type='password' 
+            placeholder='Confirm New Password'
+            required 
+            isInvalid={editPassword.PASSWORD !== editPassword.PASSWORD_CONFIRM} />
+          <Form.Control.Feedback type='invalid'>
+            Passwords do not match
+          </Form.Control.Feedback>
+        </Form.Group>
+        <Button type='submit' disabled={editPassword.PASSWORD === null || editPassword.PASSWORD.length < 6 || editPassword.PASSWORD.length > 32 || editPassword.PASSWORD !== editPassword.PASSWORD_CONFIRM}>
+          UPDATE PASSWORD
+        </Button>
+      </Form>
+      <p className='text-center rounded border-danger bg-danger-subtle m-2'> 
+        {!errorPwMessage ? null : errorPwMessage }
       </p>
     </Offcanvas.Body>
   </Offcanvas>

@@ -101,9 +101,9 @@ def user_single(user_id, config_class=Config):
     # validate user
     res = validate_query('USER_ID', user_id, 'USERS')
     if res == 'Error':
-      return 'Error retrieving User', 500
+      return {'message': 'Error retrieving User'}, 500
     if len(res) != 1:
-      return 'User not found', 404
+      return {'message': 'User not found'}, 404
 
     # create new password dict
     auth_dict = {
@@ -136,7 +136,7 @@ def user_single(user_id, config_class=Config):
     auth_id = auth_id[0]['AUTH_ID']
 
     if check_conn(conn) == 'error':
-      return 'Error creating new password: Error adding data to USERS table', 400
+      return {'message': 'Error creating new password: Error adding data to USERS table'}, 400
     
     # inactivate old rows
     update_where = f""" AUTH."USER_ID" = {user_id}
@@ -148,12 +148,12 @@ def user_single(user_id, config_class=Config):
     run_query(inactivate_query, conn)
 
     if check_conn(conn) == 'error':
-      return 'Error updating password: Error adding data to USERS_AUTH table', 400
+      return {'message': 'Error updating password: Error adding data to USERS_AUTH table'}, 400
 
     conn.commit()
     conn.close()
 
-    return 'Password Successfully updated', 200
+    return {'message': 'Password Successfully updated'}, 200
   elif request.method == 'PUT':
     if request.json == {}:
       print('No Data')
