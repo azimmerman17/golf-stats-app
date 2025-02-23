@@ -24,10 +24,10 @@ const FacilityDetails = ({ facility }) => {
           <h6>{GetClassification(CLASSIFICATION)}</h6>
           <p className='text-muted'><small>CLASSIFICATION</small></p>
         </Col>
-        <Col sm={12}>
+        {ADDRESS ? (<Col sm={12}>
           <h6>{ADDRESS}</h6>
           <p className='text-muted'><small>ADDRESS</small></p>
-        </Col>
+        </Col>): null}
         <Col xs={12} sm={6}>
           <h6>{CITY}{STATE ? `, ${STATE}` : null}</h6>
           <p className='text-muted'><small>CITY</small></p>

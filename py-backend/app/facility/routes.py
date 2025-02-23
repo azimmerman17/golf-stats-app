@@ -17,7 +17,7 @@ from config import Config
 @bp.route('/', methods=['GET'])
 def facility_all(config_class=Config):
   if request.method == 'GET':
-    select_keys = '"FACILITY_ID", "NAME", "HANDLE", "CLASSIFICATION", "CITY", "STATE", "COUNTRY", "GEO_LAT", "GEO_LON"'
+    select_keys = '"FACILITY_ID", "NAME", "HANDLE", "COURSE_COUNT", "ESTABLISHED", "CLASSIFICATION", "CITY", "STATE", "COUNTRY", "GEO_LAT", "GEO_LON"'
     query = f"""SELECT {select_keys} FROM FACILITY
       ORDER BY "NAME", "FACILITY_ID";"""
 

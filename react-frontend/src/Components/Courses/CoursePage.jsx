@@ -16,8 +16,9 @@ const CoursesHome = () => {
   ]
 
   const courseCards = courseList.map(course => {
+    const { HANDLE } = course
     return (
-      <Col>
+      <Col sm={12} md={6} lg={6} xxl={4} className="m-auto" key={`${HANDLE}-card`}>
         <CourseCard course={course} />
       </Col>
     )
