@@ -222,7 +222,7 @@ const NewUser = () => {
             <div className='m-0 p-0'>
               <DatePicker 
                 className='form-select'
-                onChange={(date) => setUser({ ...user,  DOB: new Date(e.target.value).toLocaleDateString()})}
+                onChange={(date) => setUser({ ...user,  DOB: new Date(date).toLocaleDateString()})}
                 selected={user.DOB}
                 maxDate={new Date()}
                 showMonthDropdown

@@ -1,5 +1,4 @@
-import { useState, useContext, useEffect } from 'react';
-import Container from 'react-bootstrap/Container';
+import { useState, useContext } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
@@ -43,6 +42,17 @@ const ProfileEdit = ({ showEdit, setShowEdit, currentUser, setCurrentUser }) => 
     }
   } 
 
+  const handleClose = () => {
+    setEditUser({})
+    setUsernameUnique(false)
+    setEmailUnique(false)
+    setErrorMessage(null)
+    setEditPassword({PASSWORD: '', PASSWORD_CONFIRM: ''})
+    setPwErrorMessage(null)
+    setValidated (false)
+    setShowEdit(false)
+  }
+
   // submit the form
   const handleSubmit = async (e, form) => {
     e.preventDefault()
@@ -71,8 +81,8 @@ const ProfileEdit = ({ showEdit, setShowEdit, currentUser, setCurrentUser }) => 
   }
 
   return (
-    <Offcanvas show={showEdit} scroll={true} onHide={e => setShowEdit(false)} className='bg-secondary-subtle'>
-    <Offcanvas.Header className='bg-danger text-white' closeButton>
+    <Offcanvas show={showEdit} scroll={true} onHide={e => handleClose()} className='bg-secondary-subtle'>
+    <Offcanvas.Header className='bg-warning text-dark' closeButton>
       <Offcanvas.Title className='fs-3 m-auto'>Edit Profile Data</Offcanvas.Title>
     </Offcanvas.Header>
     <Offcanvas.Body className='m-2 shadow rounded bg-white'>

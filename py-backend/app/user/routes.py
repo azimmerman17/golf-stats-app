@@ -204,12 +204,12 @@ def user_single(user_id, config_class=Config):
     # run delete query
     run_query(query, conn)
     if check_conn(conn) == 'error':
-      return f'Error deleting user', 400
+      return {'message': 'Error deleting user'}, 400
 
     conn.commit()
     conn.close()
 
-    return 'User Data Deleted.'
+    return {'message': 'User Data Deleted.'}, 204 
   
 # ALL USERS FROM A SINGLE FACILITY
 @bp.route('/facility/<int:facility_id>', methods=['GET'])

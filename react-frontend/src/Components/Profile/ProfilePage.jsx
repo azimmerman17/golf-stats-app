@@ -13,12 +13,13 @@ import ProfileHome from './ProfileHome';
 import HomeCourseCard from '../Courses/HomeCourseCard';
 import ProfileInfoCard from './ProfileInfoCard';
 import ProfileEdit from './ProfileEdit';
+import ProfileDelete from './ProfileDelete';
 
 const ProfilePage = () => {
   const {currentUser, setCurrentUser} = useContext(CurrentUser)
   const {currentPage, setCurrentPage} = useContext(CurrentPage)
   const [showEdit, setShowEdit] = useState(false);
-  const [showDelete, setShowDelete] = useState(false);
+  const [showDelete, setShowDelete] = useState(false)
 
   const breadcrumbList = [
     {name: 'Home', change: '', active: true},
@@ -29,12 +30,13 @@ const ProfilePage = () => {
     <div>
       <Breadcrumbs list={breadcrumbList} />
       <ProfileEdit showEdit={showEdit} setShowEdit={setShowEdit} currentUser={currentUser} setCurrentUser={setCurrentUser} />
+      <ProfileDelete id={currentUser.USER_ID} username={currentUser.USERNAME} showDelete={showDelete} setShowDelete={setShowDelete} setCurrentUser={setCurrentUser} setCurrentPage={setCurrentPage} />
       <ProfileHome />
       <Row>
         <Col md={6} className='text-center mb-4'>
           <HomeCourseCard facility={currentUser.HOME_FACILITY.FACILITY} active={false} />
           <Row className='mx-2'>
-            <Button variant='danger' onClick={e => setCurrentPage('Courses')}>
+            <Button variant='success' onClick={e => setCurrentPage('Courses')}>
               View Home Facility
             </Button>
           </Row>
@@ -45,7 +47,7 @@ const ProfilePage = () => {
             <Button variant='warning' className='my-1' onClick={e => setShowEdit(true)}>
               <FaEdit />
             </Button>
-            <Button variant='danger' className='text-light my-1' onClick={e => console.log('DELETE')}>
+            <Button variant='danger' className='text-light my-1' onClick={e => setShowDelete(true)}>
               <FaTrash />
             </Button>
           </Row>
