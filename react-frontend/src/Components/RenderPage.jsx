@@ -9,6 +9,7 @@ import HomePage from "./HomePage"
 import Login from "./Login"
 import About from './About'
 import ProfilePage from './Profile/ProfilePage'
+import CoursesHome from './Courses/CoursePage'
 
 const RenderPage = () => {
   const { currentUser, setCurrentUser } = useContext(CurrentUser)
@@ -28,7 +29,7 @@ const RenderPage = () => {
     case 'Records':
       return currentPage
     case 'Courses':
-      return currentPage
+      return <CoursesHome />
     case 'Profile':
       return <ProfilePage />
     case 'Logout':
