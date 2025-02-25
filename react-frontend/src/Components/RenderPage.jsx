@@ -10,6 +10,7 @@ import Login from "./Login"
 import About from './About'
 import ProfilePage from './Profile/ProfilePage'
 import CoursesHome from './Courses/CoursePage'
+import FacilityHome from './Courses/FacilityHome'
 
 const RenderPage = () => {
   const { currentUser, setCurrentUser } = useContext(CurrentUser)
@@ -30,6 +31,8 @@ const RenderPage = () => {
       return currentPage
     case 'Courses':
       return <CoursesHome />
+    case 'Facility':
+      return <FacilityHome />
     case 'Profile':
       return <ProfilePage />
     case 'Logout':

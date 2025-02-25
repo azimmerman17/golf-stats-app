@@ -4,6 +4,7 @@ import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
 
 import { CourseList } from "../../Contexts/CourseListContext"
+
 import CourseCard from "./CourseCard"
 import Breadcrumbs from "../Breadcrumbs"
 

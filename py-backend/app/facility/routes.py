@@ -26,31 +26,86 @@ def facility_all(config_class=Config):
       res = to_dict(mapping)
       return res, 200
     except Exception:
-      return 'Error loading the facilities', 500
+      return {'message': 'Error loading the facilities'}, 500
 
 # GET SINGLE FACILITY, POST NEW COURSE TO EXISTING FACILITY, UPDATE FACILITY DATA, DELETE FACILTY AND ALL ITS CHILD DATA
 @bp.route('/<int:id>', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def facility_one(id, config_class=Config):
   if request.method == 'GET':
+    # get facility
     facility_select_keys = '"FACILITY_ID", "NAME", "HANDLE", "CLASSIFICATION", "COURSE_COUNT", "ESTABLISHED", "WEBSITE", "ADDRESS", "CITY", "STATE", "COUNTRY", "GEO_LAT", "GEO_LON"'
     facility_query = f"""SELECT {facility_select_keys} FROM FACILITY
       WHERE "FACILITY_ID" = '{escape(id)}';"""
+
     facility_mapping = run_query(facility_query).mappings().all()
     facility = to_dict(facility_mapping)[0]
 
+    # get course in facility
     course_select_keys = '"COURSE_ID", "FACILITY_ID", "NAME", "HOLE_COUNT", "ESTABLISHED", "ARCHITECT"'
     course_query = f"""SELECT {course_select_keys} FROM COURSE
-      WHERE "FACILITY_ID" = {escape(id)};"""
+      WHERE "FACILITY_ID" = {escape(id)}
+      ORDER BY "NAME" ASC;"""
 
     try:
       course_mapping = run_query(course_query).mappings().all()
-      course = to_dict(course_mapping)
+      courses = to_dict(course_mapping)
     except Exception:
-      return 'Error loading facility', 500
+      return {'message': 'Error loading facility'}, 500
+
+    for course in courses:
+      # get tees from course
+      tee_select_keys = '"TEE_ID", "NAME", "YARDS", "METERS", "HOLE_COUNT"'
+      tee_query = f"""SELECT {tee_select_keys} FROM TEE
+        WHERE "COURSE_ID" = {course['COURSE_ID']}
+        ORDER BY "YARDS" DESC;"""
+
+      try:
+        tee_mapping = run_query(tee_query).mappings().all()
+        tees = to_dict(tee_mapping)
+      except Exception:
+        return {'message': 'Error loading facility tees'}, 500
+
+      course['TEES'] = tees
+
+      for tee in tees:
+        # get ratings for each tee
+        rating_select_keys = 'R."RATING_ID", R."TEE_ID", R."NAME", R."HOLE_COUNT", R."GENDER", R."START_HOLE", R."COURSE_RATING", R."SLOPE",R. "PAR", R."BOGEY_RATING"'
+        rating_query = f"""SELECT {rating_select_keys} FROM RATING R
+          WHERE R."TEE_ID" = {tee['TEE_ID']}
+            AND R."EFFECTIVE_DATE" = (SELECT MAX(R1."EFFECTIVE_DATE") FROM RATING R1
+                                      WHERE R1."RATING_ID" = R."RATING_ID"
+                                        AND R1."EFFECTIVE_DATE" <= NOW())
+          ORDER BY R."GENDER" DESC, R."HOLE_COUNT", R."START_HOLE";"""
+
+        try:
+          rating_mapping = run_query(rating_query).mappings().all()
+          ratings = to_dict(rating_mapping)
+        except Exception:
+          return {'message': 'Error loading facility rating'}, 500
+
+        tee['RATINGS'] = ratings
+
+        # get holes for each tee
+        hole_select_keys = 'H."HOLE_ID", H."NUMBER", H."YARDS", H."METERS", H."PAR_MALE",H."SI_MALE", H."PAR_FEMALE", H."SI_FEMALE"'
+        hole_query = f"""SELECT {hole_select_keys} FROM HOLE H
+          WHERE H."TEE_ID" = {tee['TEE_ID']}
+            AND H."EFFECTIVE_DATE" = (SELECT MAX(H1."EFFECTIVE_DATE") FROM HOLE H1
+                                      WHERE H1."HOLE_ID" = H."HOLE_ID"
+                                        AND H1."EFFECTIVE_DATE" <= NOW())
+          ORDER BY H."NUMBER";"""
+
+        try:
+          hole_mapping = run_query(hole_query).mappings().all()
+          holes = to_dict(hole_mapping)
+        except Exception:
+          return {'message': 'Error loading facility hole'}, 500
+
+        tee['HOLES'] = holes
+
 
     return {
       'FACILITY': facility,
-      'COURSES': course
+      'COURSES': courses
     }, 200
   elif request.method == 'POST':
     # check if facility exists
