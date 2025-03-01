@@ -12,12 +12,10 @@ const CurrentFacilityProvider = ({ children }) => {
     const getCourseFacility = async (id) => {
       let response = await fetch(BASE_URL + '/facility/' + id)
       let  facility = await response.json()
-      console.log(facility)
 
       setCurrentFacility(facility)
     }
 
-    console.log(typeof currentFacility)
     if (typeof currentFacility === 'number' || typeof currentFacility === 'string') getCourseFacility(currentFacility)
   }, [currentFacility])
   
