@@ -7,6 +7,7 @@ import { FaEdit } from "react-icons/fa";
 
 import { CurrentUser } from '../../Contexts/CurrentUserContext';
 import { CurrentPage } from '../../Contexts/CurrentPageContext';
+import { CurrentFacility } from '../../Contexts/CurrentFacilityContext';
 
 import Breadcrumbs from '../Breadcrumbs';
 import ProfileHome from './ProfileHome';
@@ -18,6 +19,8 @@ import ProfileDelete from './ProfileDelete';
 const ProfilePage = () => {
   const {currentUser, setCurrentUser} = useContext(CurrentUser)
   const {currentPage, setCurrentPage} = useContext(CurrentPage)
+  const {currentFacility, setCurrentFacility} = useContext(CurrentFacility)
+
   const [showEdit, setShowEdit] = useState(false);
   const [showDelete, setShowDelete] = useState(false)
 
@@ -25,6 +28,12 @@ const ProfilePage = () => {
     {name: 'Home', change: '', active: true},
     {name: 'Profile', change: 'profile', active: false}
   ]
+
+  const NavHomeFacility = (id) => {
+    console.log(id)
+    setCurrentFacility(id)
+    setCurrentPage('Facility')
+  }
 
   return (
     <div>
@@ -36,7 +45,7 @@ const ProfilePage = () => {
         <Col md={6} className='text-center mb-4'>
           <HomeCourseCard facility={currentUser.HOME_FACILITY.FACILITY} active={false} />
           <Row className='mx-2'>
-            <Button variant='success' onClick={e => setCurrentPage('Courses')}>
+            <Button variant='success' onClick={e => NavHomeFacility(currentUser.HOME_FACILITY.FACILITY.FACILITY_ID)}>
               View Home Facility
             </Button>
           </Row>
