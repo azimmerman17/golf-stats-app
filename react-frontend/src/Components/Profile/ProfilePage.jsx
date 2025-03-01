@@ -30,7 +30,6 @@ const ProfilePage = () => {
   ]
 
   const NavHomeFacility = (id) => {
-    console.log(id)
     setCurrentFacility(id)
     setCurrentPage('Facility')
   }

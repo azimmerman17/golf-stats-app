@@ -13,7 +13,7 @@ const CoursesHome = () => {
 
   const breadcrumbList = [
     {name: 'Home', change: '', active: true},
-    {name: 'Course', change: 'Courses', active: false}
+    {name: 'Courses', change: 'Courses', active: false}
   ]
 
   const courseCards = courseList.map(course => {

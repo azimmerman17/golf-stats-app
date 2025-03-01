@@ -9,29 +9,34 @@ import { CurrentFacility } from '../../Contexts/CurrentFacilityContext';
 import Breadcrumbs from '../Breadcrumbs'
 import FacilityContact from './FacilityContact';
 import Image from 'react-bootstrap/esm/Image';
+import CoursesHomeTab from './CoursesHomeTab';
+import GetFlag from '../../Functions/GetFlag';
 
 
 const FacilityHome = () => { 
   const {  currentFacility, setCurrentFacility } = useContext(CurrentFacility)
   const [ courseName, setCourseName] = useState(null)
   const [ currentTab, setCurrentTab ] = useState('Home')
+  const [ currentCourse, setCurrentCourse] = useState(null)
 
   useEffect(() => {
     if (currentFacility.FACILITY) {
       const { NAME } = currentFacility.FACILITY
       setCourseName(NAME)
+    if (currentFacility.COURSES.length === 1)
+      setCurrentCourse(currentFacility.COURSES[0])
     }
   }, [currentFacility])
 
   const breadcrumbList = [
     {name: 'Home', change: '', active: true},
-    {name: 'Course', change: 'Courses', active: true},
+    {name: 'Courses', change: 'Courses', active: true},
     {name: `${courseName}`, change: 'Facility', active: false}
   ]
 
   const tabs = [
     'Home',
-    'Courses',
+    'Course',
     // 'Records',
     'Contact Info'
   ]
@@ -47,7 +52,7 @@ const FacilityHome = () => {
   const view = (tab) => {
     switch (tab) {
       case 'Home':
-        return tab
+        return <CoursesHomeTab facility={currentFacility.FACILITY} courses={currentFacility.COURSES} setCurrentCourse={setCurrentCourse} setCurrentTab={setCurrentTab} />
       case 'Courses':
         return tab
       // case 'Records':
@@ -71,6 +76,8 @@ const FacilityHome = () => {
             <h2 className='m-2 text-center align-text-bottom'>{NAME}</h2>
           </Col>
           <Col sm={2}>
+            <div className='mb-2'>{GetFlag(currentFacility.FACILITY.COUNTRY, 48, 36)}</div>
+            <div>{currentFacility.FACILITY.COUNTRY === 'US' ? GetFlag(`${currentFacility.FACILITY.COUNTRY}-${currentFacility.FACILITY.STATE}`, 48, 36): null}</div>
           </Col>
         </Row>
 
@@ -85,7 +92,7 @@ const FacilityHome = () => {
       <Nav justify variant='tabs' className='border-bottom border-black border-3 p-1' defaultActiveKey='Home' activeKey={currentTab}>
         {tabLinks}
       </Nav>
-      {view(currentTab)}
+      { courseName ? view(currentTab) : null }
     </Container>
   )
 }
