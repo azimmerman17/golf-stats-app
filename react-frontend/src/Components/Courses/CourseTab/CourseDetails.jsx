@@ -1,14 +1,36 @@
-const CourseDetails = ({ course, setCurrentCourse }) => {
+import { useState } from "react"
+import Container from "react-bootstrap/esm/Container"
+import Row from "react-bootstrap/esm/Row"
+import Col from "react-bootstrap/esm/Col"
+
+import FacilityCourseCard from "../FacilityCourseCard"
+import CourseTeeCard from "./CourseTeeCard"
+
+const CourseDetails = ({ course }) => {
+  const { selectedTee, setSelectedTee } = useState(course.TEES[0])
+  const { TEES } = course
   
 
   return (
-    <div>
+    <Container fluid className='p-0'>
+      <Row className='my-2 mx-1'>
+        <Col>
+          <CourseTeeCard tees={TEES} selectedTee={selectedTee} setSelectedTee={setSelectedTee}/>
+          <p>Scorecards - Hole by hole lengths</p>
+        </Col>
+        <Col>
+          <Row>
+            <FacilityCourseCard course={course}/>
+          </Row>
+          <Row>
+            <p>Holes - Card with hole overview maybe satalite overview??</p>
+            <p>Course Stats - Change with the tee offer base information - maybe combine with handicap?</p>
+
+          </Row>
+        </Col>
+      </Row>
       Course Details
-      <p>Tees & Ratings - Overview of the different Tees the course offers</p>
-      <p>Holes - Card with hole overview maybe satalite overview??</p>
-      <p>Scorecards - Hole by hole lengths could be combined with tees & Ratings</p>
-      <p>course stats - Change with the tee offer base information - maybe combine with handicap?</p>
-    </div>
+      </Container>
   )
 }
 

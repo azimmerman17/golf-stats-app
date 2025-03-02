@@ -42,7 +42,7 @@ const FacilityCourseCard = ({ course }) => {
   }
 
   return (
-    <Card style={{ width: '40vw' }} className='border-danger border-3 rounded p-2 mb-3'>
+    <Card className='border-danger border-3 rounded p-2 mb-3'>
       <Card.Body>
         <Card.Title className='text-center p-1'>{NAME}</Card.Title>
         <Card.Text className='text-center p-1'>

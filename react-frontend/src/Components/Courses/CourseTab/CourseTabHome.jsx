@@ -8,7 +8,6 @@ import Breadcrumb from 'react-bootstrap/Breadcrumb'
 
 
 const CourseTabHome = ({ currentCourse, setCurrentCourse, courses }) => {
-  console.log(currentCourse)
   if (!currentCourse) {
     const facilityCourses = courses.map(course => {
 
@@ -33,7 +32,6 @@ const CourseTabHome = ({ currentCourse, setCurrentCourse, courses }) => {
       </Container>
     )
   }
-console.log(courses)
 
   return (
     <>
