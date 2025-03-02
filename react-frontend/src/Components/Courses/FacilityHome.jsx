@@ -11,6 +11,7 @@ import FacilityContact from './FacilityContact';
 import Image from 'react-bootstrap/esm/Image';
 import CoursesHomeTab from './CoursesHomeTab';
 import GetFlag from '../../Functions/GetFlag';
+import CourseTabHome from './CourseTab/CourseTabHome';
 
 
 const FacilityHome = () => { 
@@ -36,7 +37,7 @@ const FacilityHome = () => {
 
   const tabs = [
     'Home',
-    'Course',
+    'Courses',
     // 'Records',
     'Contact Info'
   ]
@@ -54,7 +55,7 @@ const FacilityHome = () => {
       case 'Home':
         return <CoursesHomeTab facility={currentFacility.FACILITY} courses={currentFacility.COURSES} setCurrentCourse={setCurrentCourse} setCurrentTab={setCurrentTab} />
       case 'Courses':
-        return tab
+        return <CourseTabHome currentCourse={currentCourse} setCurrentCourse={setCurrentCourse} courses={currentFacility.COURSES} />
       // case 'Records':
       // return tab
       // case 'Stats':

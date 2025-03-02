@@ -13,7 +13,7 @@ const CoursesHomeTab = ({ facility, courses, setCurrentCourse, setCurrentTab }) 
 
     const handleClick = (course) => {
       setCurrentCourse(course)
-      setCurrentTab('Course')
+      setCurrentTab('Courses')
     }
 
     return (
