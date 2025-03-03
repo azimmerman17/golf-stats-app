@@ -18,7 +18,7 @@ const ProfileHome = () => {
     <Card className='mx-auto my-1 p-2 border border-5 border-danger rounded-3 shadow-lg '>
       <Card.Body>
         <Card.Title className='text-center fs-2'>{FIRST_NAME} {LAST_NAME}</Card.Title>
-        <Card.Subtitle className="mb-2 text-muted text-center fs-4">{USERNAME}</Card.Subtitle>
+        <Card.Subtitle className='mb-2 text-muted text-center fs-4'>{USERNAME}</Card.Subtitle>
           <Row>
             <Col sm={6} className='text-center'>
               <h6>{EMAIL}</h6>

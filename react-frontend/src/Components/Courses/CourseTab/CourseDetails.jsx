@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react"
-import Container from "react-bootstrap/esm/Container"
-import Row from "react-bootstrap/esm/Row"
-import Col from "react-bootstrap/esm/Col"
+import { useEffect, useState } from 'react'
+import Container from 'react-bootstrap/esm/Container'
+import Row from 'react-bootstrap/esm/Row'
+import Col from 'react-bootstrap/esm/Col'
 
-import FacilityCourseCard from "../FacilityCourseCard"
-import CourseTeeCard from "./CourseTeeCard"
+import FacilityCourseCard from '../FacilityCourseCard'
+import CourseTeeCard from './CourseTeeCard'
 
 const CourseDetails = ({ course }) => {
   const [ selectedTee, setSelectedTee ] = useState(course.TEES[0].NAME)

@@ -2,8 +2,8 @@ import { useContext, useState } from 'react';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/esm/Button';
-import { FaTrash } from "react-icons/fa6";
-import { FaEdit } from "react-icons/fa";
+import { FaTrash } from 'react-icons/fa6';
+import { FaEdit } from 'react-icons/fa';
 
 import { CurrentUser } from '../../Contexts/CurrentUserContext';
 import { CurrentPage } from '../../Contexts/CurrentPageContext';

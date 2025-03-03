@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react"
-import Card from "react-bootstrap/Card"
-import Row from "react-bootstrap/Row"
-import Col from "react-bootstrap/Col"
+import { useState, useEffect } from 'react'
+import Card from 'react-bootstrap/Card'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
 
-import GetFlag from "../../Functions/GetFlag"
-import GetPlayerType from "../../Functions/GetPlayerType"
-import GetGender from "../../Functions/GetGender"
+import GetFlag from '../../Functions/GetFlag'
+import GetPlayerType from '../../Functions/GetPlayerType'
+import GetGender from '../../Functions/GetGender'
 
 const ProfileInfoCard = ({ currentUser }) => {
   const { DOB, ROLE, UNITS, USER_GENDER,  EMAIL, NATIONALITY, PLAYER_TYPE, USERNAME, NATION} = currentUser

@@ -1,5 +1,4 @@
 import Card from 'react-bootstrap//Card'
-import Accordion from 'react-bootstrap/Accordion'
 
 import CourseTeeDetails from './CourseTeeDetails'
 

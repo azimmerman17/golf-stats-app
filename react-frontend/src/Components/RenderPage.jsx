@@ -5,8 +5,8 @@ import { CurrentPage } from '../Contexts/CurrentPageContext'
 
 
 
-import HomePage from "./HomePage"
-import Login from "./Login"
+import HomePage from './HomePage'
+import Login from './Login'
 import About from './About'
 import ProfilePage from './Profile/ProfilePage'
 import CoursesHome from './Courses/CoursePage'

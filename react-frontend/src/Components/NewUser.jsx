@@ -10,7 +10,7 @@ import DatePicker from 'react-datepicker'
 import { Typeahead } from 'react-bootstrap-typeahead';
 
 import { CourseList } from '../Contexts/CourseListContext';
-import { NationList } from "../Contexts/NationListContext";
+import { NationList } from '../Contexts/NationListContext';
 import { UserList } from '../Contexts/UserListContext';
 
 import GetCourseOptions from '../Functions/GetCourseOptions';
@@ -227,7 +227,7 @@ const NewUser = () => {
                 maxDate={new Date()}
                 showMonthDropdown
                 showYearDropdown
-                dropdownMode="select"
+                dropdownMode='select'
                 onChangeRaw={(e) => setUser({ ...user,  DOB: new Date(e.target.value).toLocaleDateString()})}
               />
             </div>

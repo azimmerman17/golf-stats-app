@@ -1,10 +1,10 @@
-import Container from "react-bootstrap/Container"
-import Row from "react-bootstrap/Row"
-import Col from "react-bootstrap/Col"
+import Container from 'react-bootstrap/Container'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
 import Image from 'react-bootstrap/Image'
-import Breadcrumbs from "./Breadcrumbs"
-import modules from "../assets/builtWith"
-import GetIcon from "../Functions/getIcon"
+import Breadcrumbs from './Breadcrumbs'
+import modules from '../assets/builtWith'
+import GetIcon from '../Functions/getIcon'
 
 const About = () => {
   // message
@@ -24,7 +24,7 @@ const About = () => {
         if (s === server) {
           return (
             <Col className='text-center my-2' key={`mod-${alt}`}>
-              <a href={url} target="_blank">
+              <a href={url} target='_blank'>
                 <Image src={GetIcon(alt)} className={`logo ${module}`} alt={alt} />
               </a>
             </Col>

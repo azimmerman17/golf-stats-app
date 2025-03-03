@@ -1,4 +1,4 @@
-import Image from "react-bootstrap/Image"
+import Image from 'react-bootstrap/Image'
 
 const GetFlag = (nation, width, height) => {
   const flag_url = 'https://flagcdn.com'

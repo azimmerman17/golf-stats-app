@@ -7,7 +7,7 @@ import { Typeahead } from 'react-bootstrap-typeahead';
 import DatePicker from 'react-datepicker'
 
 import { CourseList } from '../../Contexts/CourseListContext';
-import { NationList } from "../../Contexts/NationListContext";
+import { NationList } from '../../Contexts/NationListContext';
 import { UserList } from '../../Contexts/UserListContext';
 
 import GetCourseOptions from '../../Functions/GetCourseOptions';
@@ -189,7 +189,7 @@ const ProfileEdit = ({ showEdit, setShowEdit, currentUser, setCurrentUser }) => 
               maxDate={new Date()}
               showMonthDropdown
               showYearDropdown
-              dropdownMode="select"
+              dropdownMode='select'
               onChangeRaw={(e) => setEditUser({ ...editUser,  DOB: new Date(e.target.value).toLocaleString()})}
             />
           </div>

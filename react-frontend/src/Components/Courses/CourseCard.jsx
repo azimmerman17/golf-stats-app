@@ -21,7 +21,7 @@ const CourseCard = ({ course })  => {
   return (
     <Button variant='danger' className='p-1 m-2 text-center shadow-lg' onClick={e => handleClick(FACILITY_ID)}>
       <Card>
-        <Card.Img variant="top" src={`https://logos.bluegolf.com/${HANDLE}/profile.png` || `${golferLogo}` } alt={`${NAME} Logo`} style={{ width: '100px'}} className='m-auto'/>
+        <Card.Img variant='top' src={`https://logos.bluegolf.com/${HANDLE}/profile.png` || `${golferLogo}` } alt={`${NAME} Logo`} style={{ width: '100px'}} className='m-auto'/>
         <Card.Body>
           <Card.Title className='text-center'>{NAME}</Card.Title>
             <FacilityDetails facility={course} />
