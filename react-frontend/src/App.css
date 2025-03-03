@@ -58,6 +58,10 @@
   height: 125px;
 }
 
+th, td {
+  padding: '2px' !important;
+}
+
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);

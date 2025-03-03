@@ -1,11 +1,13 @@
 import { useContext } from 'react'
+import Accordion from 'react-bootstrap/Accordion'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 
 import { CurrentUser } from '../../../Contexts/CurrentUserContext'
+import ScoreCardTable from './ScoreCardTable'
 
-const CourseTeeDetails = ({ tee }) => {
+const CourseTeeDetails = ({ tee, selectedTee, setSelectedTee }) => {
   const {currentUser, setCurrentUser} = useContext(CurrentUser)
   const { HOLES, HOLE_COUNT, METERS, NAME, RATINGS, YARDS } = tee
   const { UNITS } = currentUser
@@ -13,7 +15,6 @@ const CourseTeeDetails = ({ tee }) => {
   const ratingInfo = (gender) =>  {
     const rating = RATINGS.filter(RATING => RATING.HOLE_COUNT === HOLE_COUNT && RATING.START_HOLE === 1 && RATING.GENDER === gender)
     
-    console.log(gender, NAME, rating.length)
     if (!rating.length) return null
     const { COURSE_RATING, PAR,  SLOPE } = rating[0]
 
@@ -36,7 +37,7 @@ const CourseTeeDetails = ({ tee }) => {
   }
   
   return( 
-    <Container fluid>
+    <Container fluid className='p-1'>
       <Row>
       <Col>
           <h6>{NAME}</h6>
@@ -46,11 +47,19 @@ const CourseTeeDetails = ({ tee }) => {
           <h6>{ UNITS === 'M' ? METERS : YARDS}</h6>
           <p className='text-muted'><small>{ UNITS === 'M' ? 'METERS' : 'YARDS'}</small></p>
         </Col>
+      </Row>
         {ratingInfo('M')}
         {ratingInfo('F')}
-        SCORECARD ACCORDIAN
+        <Accordion defaultActiveKey={selectedTee} className='p-0 mb-1' onSelect={e =>  setSelectedTee(NAME)}>
+          <Accordion.Item eventKey={NAME}>
+            <Accordion.Header>{NAME} Tee Scorecard</Accordion.Header>
+            <Accordion.Body className='p-1'>
+              <ScoreCardTable holes={HOLES} units={UNITS}/>
+            </Accordion.Body>
+          </Accordion.Item>
+        </Accordion>
         <hr />
-      </Row>
+
     </Container>
   )
 }
