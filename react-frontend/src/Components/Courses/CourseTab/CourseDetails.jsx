@@ -5,6 +5,7 @@ import Col from 'react-bootstrap/esm/Col'
 
 import FacilityCourseCard from '../FacilityCourseCard'
 import CourseTeeCard from './CourseTeeCard'
+import CourseHandicap from './CourseHandicap'
 
 const CourseDetails = ({ course }) => {
   const [ selectedTee, setSelectedTee ] = useState(course.TEES[0].NAME)
@@ -14,7 +15,6 @@ const CourseDetails = ({ course }) => {
     if (!selectedTee && TEES) {
       setSelectedTee(TEES[0].NAME)
     }
-    console.log(selectedTee)
   }, [selectedTee])
 
   return (
@@ -28,8 +28,9 @@ const CourseDetails = ({ course }) => {
             <FacilityCourseCard course={course}/>
           </Row>
           <Row>
+            <CourseHandicap tees={TEES} selectedTee={selectedTee} />
             <p>Holes - Card with hole overview maybe satalite overview??</p>
-            <p>Course Stats - Change with the tee offer base information - maybe combine with handicap?</p>
+            <p>Course Stats - Change with the tee offer base information</p>
           </Row>
         </Col>
       </Row>

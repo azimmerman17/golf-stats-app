@@ -1,7 +1,6 @@
 import Table from 'react-bootstrap/Table';
 
 const ScoreCardTable = ({ holes, units }) => {
-  console.log(holes)
 
   const tableData = (side, title, key) => {
     let sideHoles = []
@@ -15,7 +14,6 @@ const ScoreCardTable = ({ holes, units }) => {
       return (
       <tr>
         <td><small>{title}</small></td>
-        {/* {display(title)} */}
         {sideHoles.map(hole => {return <td><small>{hole[key]}</small></td>})}
         <td className='fw-bold'><small>{total > 0 ? total : null}</small></td>
       </tr>

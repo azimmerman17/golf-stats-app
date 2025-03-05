@@ -75,7 +75,7 @@ def facility_one(id, config_class=Config):
             AND R."EFFECTIVE_DATE" = (SELECT MAX(R1."EFFECTIVE_DATE") FROM RATING R1
                                       WHERE R1."RATING_ID" = R."RATING_ID"
                                         AND R1."EFFECTIVE_DATE" <= NOW())
-          ORDER BY R."GENDER" DESC, R."HOLE_COUNT", R."START_HOLE";"""
+          ORDER BY R."GENDER" DESC, R."HOLE_COUNT" DESC, R."START_HOLE";"""
 
         try:
           rating_mapping = run_query(rating_query).mappings().all()

@@ -16,7 +16,7 @@ const CourseTeeDetails = ({ tee, selectedTee, setSelectedTee }) => {
     const rating = RATINGS.filter(RATING => RATING.HOLE_COUNT === HOLE_COUNT && RATING.START_HOLE === 1 && RATING.GENDER === gender)
     
     if (!rating.length) return null
-    const { COURSE_RATING, PAR,  SLOPE } = rating[0]
+    const { BOGEY_RATING, COURSE_RATING, PAR,  SLOPE } = rating[0]
 
     return (
       <Row>
@@ -28,6 +28,11 @@ const CourseTeeDetails = ({ tee, selectedTee, setSelectedTee }) => {
           <h6>{SLOPE}</h6>
           <p className='text-muted'><small>{gender === 'M' ? 'Mens' : 'Ladies'} Slope</small></p>
         </Col>
+        <Col>
+          <h6>{BOGEY_RATING}</h6>
+          <p className='text-muted'><small>Bogey Rating</small></p>
+        </Col>
+
         <Col>
           <h6>{PAR}</h6>
           <p className='text-muted'><small>{gender === 'M' ? 'Mens' : 'Ladies'} Par</small></p>
