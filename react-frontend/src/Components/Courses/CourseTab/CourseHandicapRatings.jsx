@@ -45,13 +45,12 @@ const CourseHandicapRating = ({ rating, setSelections, selections }) => {
       </Row>
       <Row>
         <Col xs={12} sm={6} md={6} className='text-center'>
-          <h6><Form onChange={e => setSelections({...selections, score: e.target.value})}> 
-                <Form.Group controlId="user-handicap">
-                  <Form.Control type="number" placeholder={score} />
-                  <Form.Label className='text-muted'><small>Hdcp Index</small></Form.Label>
-                </Form.Group>
-              </Form></h6>
-          <p className='text-muted'><small>SCORE</small></p>
+          <Form onChange={e => setSelections({...selections, score: e.target.value})}> 
+            <Form.Group controlId="user-handicap">
+              <Form.Control type="number" placeholder={score} />
+              <Form.Label className='text-muted'><small>SCORE</small></Form.Label>
+            </Form.Group>
+          </Form>
         </Col>
         <Col xs={12} sm={6} md={6} className='text-center'>
           <h6>{CalcScoreDifferential(handicap, rating[0], score)}</h6>

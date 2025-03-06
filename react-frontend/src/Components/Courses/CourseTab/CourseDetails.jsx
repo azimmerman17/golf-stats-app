@@ -3,9 +3,11 @@ import Container from 'react-bootstrap/esm/Container'
 import Row from 'react-bootstrap/esm/Row'
 import Col from 'react-bootstrap/esm/Col'
 
+
 import FacilityCourseCard from '../FacilityCourseCard'
 import CourseTeeCard from './CourseTeeCard'
 import CourseHandicap from './CourseHandicap'
+import CourseHolesCard from './CourseHolesCard'
 
 const CourseDetails = ({ course }) => {
   const [ selectedTee, setSelectedTee ] = useState(course.TEES[0].NAME)
@@ -29,8 +31,10 @@ const CourseDetails = ({ course }) => {
           </Row>
           <Row>
             <CourseHandicap tees={TEES} selectedTee={selectedTee} />
-            <p>Holes - Card with hole overview maybe satalite overview??</p>
-            <p>Course Stats - Change with the tee offer base information</p>
+            <CourseHolesCard tees={TEES} />
+            {/* FUTURE DEVELOPMENT */}
+            {/* <p>Course Stats - Change with the tee offer base information</p> */}
+            {/* <p>Strokes Gained - Expected Scores based on HAndicap Index</p> */}
           </Row>
         </Col>
       </Row>
