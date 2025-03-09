@@ -14,6 +14,14 @@ class Hole(db.Model):
   SI_MALE = db.Column(db.Integer, db.CheckConstraint('SI_MALE >= 1 AND SI_MALE <= 18'))
   PAR_FEMALE = db.Column(db.Integer, db.CheckConstraint('PAR_FEMALE >= 3 AND PAR_FEMALE <= 6'))
   SI_FEMALE = db.Column(db.Integer, db.CheckConstraint('SI_FEMALE >= 1 AND SI_FEMALE <= 18'))
+  TEE_LAT_LON = db.Column(db.ARRAY(db.Float, dimensions=2))
+  DL_LAT_LON = db.Column(db.ARRAY(db.Float, dimensions=2))
+  DL2_LAT_LON = db.Column(db.ARRAY(db.Float, dimensions=2))
+  GREEN_LAT_LON = db.Column(db.ARRAY(db.Float, dimensions=2))
+  HEADING = db.Column(db.Float, db.CheckConstraint('HEADING >= 0 AND HEADING <= 360'))
+  GREEN_DEPTH = db.Column(db.Integer)
+  ZOOM =  db.Column(db.Integer, db.CheckConstraint('ZOOM >= 1 AND ZOOM <= 20')) 
+
   EFFECTIVE_DATE = db.Column(db.DATE, nullable=False, default=date.today())
   CREATED_AT = db.Column(db.TIMESTAMP,nullable=False, default=datetime.now())
   UPDATED_AT = db.Column(db.TIMESTAMP,nullable=False, default=datetime.now())
@@ -50,7 +58,19 @@ class Hole(db.Model):
         raise ValueError(f'Invalid Stroke Index - {value} - Stroke Index must be between 1 and 18 for a hole')
       return value
 
-def __init__(self, HOLE_ID, TEE_ID, NUMBER, YARDS, METERS, PAR_MALE, SI_MALE, PAR_FEMALE, SI_FEMALE, EFFECTIVE_DATE):
+  @orm.validates('HEADING')
+  def validate_heading(self, key, value):
+    if not 0 <= value <= 360:
+      raise ValueError(f'Invalid Heading - {value} - Heading must be between 0 and 360')
+    return value
+  
+  @orm.validates('ZOOM')
+  def validate_zoom(self, key, value):
+    if not 0 <= value <= 20:
+      raise ValueError(f'Invalid zoom - {value} - Heading must be between 0 and 20')
+    return value
+
+def __init__(self, HOLE_ID, TEE_ID, NUMBER, YARDS, METERS, PAR_MALE, SI_MALE, PAR_FEMALE, SI_FEMALE,TEE_LAT_LON, DL_LAT_LON, DL2_LAT_LON, GREEN_LAT_LON, ZOOM, GREEN_DEPTH, EFFECTIVE_DATE):
   self.HOLE_ID = HOLE_ID
   self.TEE_ID = TEE_ID
   self.NUMBER = NUMBER
@@ -60,6 +80,12 @@ def __init__(self, HOLE_ID, TEE_ID, NUMBER, YARDS, METERS, PAR_MALE, SI_MALE, PA
   self.SI_MALE = SI_MALE
   self.PAR_FEMALE = PAR_FEMALE
   self.SI_FEMALE = SI_FEMALE
+  self.TEE_LAT_LON = TEE_LAT_LON
+  self.DL_LAT_LON = DL_LAT_LON
+  self.DL2_LAT_LON = DL2_LAT_LON
+  self.GREEN_LAT_LON = GREEN_LAT_LON
+  self.ZOOM = ZOOM
+  self.GREEN_DEPTH = GREEN_DEPTH
   self.EFFECTIVE_DATE = EFFECTIVE_DATE
 
   return self
