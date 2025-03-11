@@ -86,7 +86,7 @@ def facility_one(id, config_class=Config):
         tee['RATINGS'] = ratings
 
         # get holes for each tee
-        hole_select_keys = 'H."HOLE_ID", H."NUMBER", H."YARDS", H."METERS", H."PAR_MALE",H."SI_MALE", H."PAR_FEMALE", H."SI_FEMALE", "TEE_LAT_LON", "DL_LAT_LON", "DL2_LAT_LON", "GREEN_LAT_LON", "GREEN_DEPTH", "ZOOM"'
+        hole_select_keys = 'H."HOLE_ID", H."NUMBER", H."YARDS", H."METERS", H."PAR_MALE",H."SI_MALE", H."PAR_FEMALE", H."SI_FEMALE"'
         hole_query = f"""SELECT {hole_select_keys} FROM HOLE H
           WHERE H."TEE_ID" = {tee['TEE_ID']}
             AND H."EFFECTIVE_DATE" = (SELECT MAX(H1."EFFECTIVE_DATE") FROM HOLE H1

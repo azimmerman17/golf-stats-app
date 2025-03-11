@@ -8,7 +8,7 @@ from app.extensions import db, jwt, cors
 from config import Config
 
 # FACILITY MODELS
-from app.models import facility, course, tee, rating, hole
+from app.models import facility, course, tee, rating, hole, hole_coords
 # USER MODELS
 from app.models import user, user_auth
 
@@ -30,6 +30,7 @@ def create_app(config_class=Config):
   Migrate(app,tee.db)
   Migrate(app,rating.db)
   Migrate(app,hole.db)
+  Migrate(app,hole_coords.db)
   Migrate(app,user.db)
   Migrate(app,user_auth.db)
 
