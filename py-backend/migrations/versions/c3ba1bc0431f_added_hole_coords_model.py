@@ -42,7 +42,6 @@ def upgrade():
     sa.Column('UPDATED_AT', sa.TIMESTAMP(), nullable=False),
     sa.ForeignKeyConstraint(['COURSE_ID'], ['course.COURSE_ID'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('HOLE_GEO_ID'),
-    sa.UniqueConstraint('HANDLE'),
     sa.UniqueConstraint('HOLE_GEO_ID')
     )
 

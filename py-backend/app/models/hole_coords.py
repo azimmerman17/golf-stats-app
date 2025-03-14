@@ -8,7 +8,7 @@ class HOLE_COORDS(db.Model):
   HOLE_GEO_ID = db.Column(db.Integer, primary_key=True, nullable=False, unique=True)
   COURSE_ID = db.Column(db.Integer, db.ForeignKey(COURSE.COURSE_ID, onupdate="CASCADE", ondelete="CASCADE"), nullable=False)
   NUMBER = db.Column(db.Integer, db.CheckConstraint('NUMBER >= 1', name='CHECK_COORDS_NUMBER_MIN'), db.CheckConstraint('NUMBER <= 18', name='CHECK_COORDS_NUMBER_MAX'), nullable=False)
-  HANDLE = db.Column(db.String(25), nullable=False, unique=True)
+  HANDLE = db.Column(db.String(25), nullable=False)
   TEE_LAT = db.Column(db.FLOAT, db.CheckConstraint('TEE_LAT > -90', name='CHECK_TEE_LAT_MIN'), db.CheckConstraint('TEE_LAT < 90', name='CHECK_TEE_LAT_MAX'))
   TEE_LON = db.Column(db.FLOAT, db.CheckConstraint('TEE_LON > -180', name='CHECK_TEE_LON_MIN'), db.CheckConstraint('TEE_LON < 180', name='CHECK_TEE_LON_MAX'))
   DL_LAT = db.Column(db.FLOAT, db.CheckConstraint('DL_LAT > -90', name='CHECK_DL_LAT_MIN'), db.CheckConstraint('DL_LAT < 90', name='CHECK_DL_LAT_MAX'))

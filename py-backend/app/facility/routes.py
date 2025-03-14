@@ -1,4 +1,5 @@
 # this bluebrint controls db trasactions with the Facility Models
+import requests
 from flask import request
 from markupsafe import escape
 
@@ -962,3 +963,45 @@ def facility_seed(config_class=Config):
       
     return 'Facility Insert Completed', 201
 
+# SEED FACILITY
+@bp.route('/seed/geo', methods=['POST'])
+def facility_seed_geo(config_class=Config):
+  if request.method == 'POST':
+    conn = Engine.connect()
+    conn.begin()
+    
+    from app.seeders.hole_geo import hole_geo as hole_geo
+    for course in hole_geo:
+      for n in range(len(course['data']['teelat'])):
+        # build dict for hole data to insert
+        course_data = {
+          'COURSE_ID': course['course_id'],
+          'HANDLE': course['handle'],
+          'NUMBER': n + 1,
+          'TEE_LAT': course['data']['teelat'][n] if course['data']['teelat'][n] != 0.0 else None,
+          'TEE_LON': course['data']['teelng'][n] if course['data']['teelng'][n] != 0.0 else None,
+          'DL_LAT': course['data']['doglat'][n] if course['data']['doglat'][n] != 0.0 else None,
+          'DL_LON': course['data']['doglng'][n] if course['data']['doglng'][n] != 0.0 else None,
+          'DL2_LAT': course['data']['catlat'][n] if course['data']['catlat'][n] != 0.0 else None,
+          'DL2_LON': course['data']['catlng'][n] if course['data']['catlng'][n] != 0.0 else None,
+          'CGREEN_LAT': course['data']['greenlat'][n] if course['data']['greenlat'][n] != 0.0 else None,
+          'CGREEN_LON': course['data']['greenlng'][n] if course['data']['greenlng'][n] != 0.0 else None,
+          'FGREEN_LAT': course['data']['frontlat'][n] if course['data']['frontlat'][n] != 0.0 else None,
+          'FGREEN_LON': course['data']['frontlng'][n] if course['data']['frontlng'][n] != 0.0 else None,
+          'BGREEN_LAT': course['data']['backlat'][n] if course['data']['backlat'][n] != 0.0 else None,
+          'BGREEN_LON': course['data']['backlng'][n] if course['data']['backlng'][n] != 0.0 else None,
+          'ZOOM': course['data']['zoom'][n],
+          'ROTATION': course['data']['rotation'][n],
+          'GREEN_DEPTH': course['data']['greendepth'][n] if course['data']['backlng'][n] > 0 else None,
+        }
+
+        # build insert for data
+        keys = ['COURSE_ID', 'HANDLE', 'NUMBER', 'TEE_LAT', 'TEE_LON', 'DL_LAT', 'DL_LON', 'DL2_LAT', 'DL2_LON', 'CGREEN_LAT', 'CGREEN_LON', 'FGREEN_LAT', 'FGREEN_LON', 'BGREEN_LAT', 'BGREEN_LON', 'ZOOM', 'ROTATION', 'GREEN_DEPTH']
+        insert_sql = build_insert(course_data, keys, 'HOLE_COORDS')
+
+        run_query(insert_sql, conn)
+
+    conn.commit()
+    conn.close()
+
+    return 'Hole Coordinates Insert Completed', 201
