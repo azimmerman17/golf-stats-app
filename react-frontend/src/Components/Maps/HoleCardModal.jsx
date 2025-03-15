@@ -13,6 +13,7 @@ import { LayersControl } from 'react-leaflet/LayersControl'
 
 import BuildHolebyHole from '../../Functions/buildHoleByHole'
 import CoordinatesMidpoint from '../../Functions/CoordinatesMidpoint';
+import { golferIcon_yellow, golferIcon_white, greenIcon_yellow, greenIcon_white } from './MapIcons'
 
 const HoleCardModal = ({ tees, map, showModal, setShowModal }) => {
   const course = BuildHolebyHole(tees, tees[0].HOLE_COUNT)
@@ -36,17 +37,6 @@ const HoleCardModal = ({ tees, map, showModal, setShowModal }) => {
   if (DL_LAT && DL_LON) polylineCoods.push([DL_LAT, DL_LON])
   if (DL2_LAT && DL2_LON) polylineCoods.push([DL2_LAT, DL2_LON])
   if (CGREEN_LAT && CGREEN_LON) polylineCoods.push([CGREEN_LAT,  CGREEN_LON])
-
-  const teeIcon = L.icon({
-    iconUrl: '/golfer_yellow.png',
-    iconSize: [16, 16],    
-  })
-
-  const greenIcon = L.icon({
-    iconUrl: '/golf_hole_yellow.png',
-    iconSize: [16, 16],
-  })
-
   
   return (
       <Modal show={showModal.show} fullscreen={true}  onHide={e => setShowModal({...showModal, show: false})}> 
@@ -87,10 +77,9 @@ const HoleCardModal = ({ tees, map, showModal, setShowModal }) => {
                 />
             </LayersControl.BaseLayer>
           </LayersControl>
-        <Marker position={[TEE_LAT, TEE_LON]} icon={teeIcon}></Marker>
-        <Marker position={[CGREEN_LAT, CGREEN_LON]} icon={greenIcon}></Marker>
-
-        <Polyline pathOptions={{color: 'yellow'}} positions={polylineCoods} />
+        <Marker position={[TEE_LAT, TEE_LON]} icon={golferIcon_white}></Marker>
+        <Marker position={[CGREEN_LAT, CGREEN_LON]} icon={greenIcon_white}></Marker>
+        <Polyline pathOptions={{color: '#ffff00'}} positions={polylineCoods} />
       </MapContainer>
         </Modal.Body>
         <Modal.Footer>

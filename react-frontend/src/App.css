@@ -85,6 +85,10 @@ th, td {
   color: #888;
 }
 
-#contact-map, #hole-map{ 
+#contact-map{ 
   height: 50vw; 
+}
+
+#hole-map { 
+  height: 100%; 
 }

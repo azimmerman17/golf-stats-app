@@ -3,13 +3,10 @@ import { TileLayer } from 'react-leaflet/TileLayer'
 import { Marker } from 'react-leaflet/Marker'
 import { Popup } from 'react-leaflet/Popup'
 import { LayersControl } from 'react-leaflet/LayersControl'
+import { golferIcon } from './MapIcons'
 
 
 const FacilityMap = ({ GEO_LAT, GEO_LON, NAME }) => {
-  const customIcon = L.icon({
-    iconUrl: '/golfer.svg',
-    iconSize: [32, 32],
-  });
 
   return (
     <MapContainer center={[GEO_LAT, GEO_LON]} zoom={15} scrollWheelZoom={false} id='contact-map'> 
@@ -45,7 +42,7 @@ const FacilityMap = ({ GEO_LAT, GEO_LON, NAME }) => {
             />
         </LayersControl.BaseLayer>
       </LayersControl>
-     <Marker position={[GEO_LAT, GEO_LON]} icon={customIcon}>
+     <Marker position={[GEO_LAT, GEO_LON]} icon={golferIcon}>
         <Popup>
           {NAME}
         </Popup>
