@@ -15,7 +15,7 @@ import CourseTabHome from './CourseTab/CourseTabHome';
 
 
 const FacilityHome = () => { 
-  const {  currentFacility, setCurrentFacility } = useContext(CurrentFacility)
+  const { currentFacility, setCurrentFacility } = useContext(CurrentFacility)
   const [ courseName, setCourseName] = useState(null)
   const [ currentTab, setCurrentTab ] = useState('Home')
   const [ currentCourse, setCurrentCourse] = useState(null)

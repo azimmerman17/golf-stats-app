@@ -68,6 +68,19 @@ def facility_one(id, config_class=Config):
 
       course['TEES'] = tees
 
+      # hole map data
+      map_select_keys = '"HOLE_GEO_ID", "COURSE_ID", "NUMBER", "HANDLE", "TEE_LAT", "TEE_LON", "DL_LAT", "DL_LON", "DL2_LAT", "DL2_LON", "CGREEN_LAT", "CGREEN_LON", "FGREEN_LAT", "FGREEN_LON", "BGREEN_LAT", "BGREEN_LON", "ZOOM", "ROTATION", "GREEN_DEPTH"'
+      map_query = f"""SELECT {map_select_keys} FROM HOLE_COORDS
+        WHERE "COURSE_ID" = {course['COURSE_ID']}
+        ORDER BY "NUMBER";"""
+      try:
+        map_mapping = run_query(map_query).mappings().all()
+        course_map = to_dict(map_mapping)
+      except Exception:
+        return 'Error retrieving Course Map', 500
+      
+      course['MAP'] = course_map
+
       for tee in tees:
         # get ratings for each tee
         rating_select_keys = 'R."RATING_ID", R."TEE_ID", R."NAME", R."HOLE_COUNT", R."GENDER", R."START_HOLE", R."COURSE_RATING", R."SLOPE",R. "PAR", R."BOGEY_RATING"'
@@ -106,7 +119,7 @@ def facility_one(id, config_class=Config):
 
     return {
       'FACILITY': facility,
-      'COURSES': courses
+      'COURSES': courses,
     }, 200
   elif request.method == 'POST':
     # check if facility exists
@@ -283,17 +296,15 @@ def course_single(id, config_class=Config):
 
     # hole map data
     map_select_keys = '"HOLE_GEO_ID", "COURSE_ID", "NUMBER", "HANDLE", "TEE_LAT", "TEE_LON", "DL_LAT", "DL_LON", "DL2_LAT", "DL2_LON", "CGREEN_LAT", "CGREEN_LON", "FGREEN_LAT", "FGREEN_LON", "BGREEN_LAT", "BGREEN_LON", "ZOOM", "ROTATION", "GREEN_DEPTH"'
-    map_query = f"""SELECT {course_select_keys} FROM HOLE_COORDS
+    map_query = f"""SELECT {map_select_keys} FROM HOLE_COORDS
       WHERE "COURSE_ID" = {escape(id)}
       ORDER BY "NUMBER";"""
     try:
       map_mapping = run_query(map_query).mappings().all()
-      course_map = to_dict(map_mapping)[0]
+      course_map = to_dict(map_mapping)
     except Exception:
       return 'Error retrieving Course Map', 500
 
-
-    
     #tees
     tee_select_keys = '"TEE_ID", "COURSE_ID", "NAME", "YARDS", "METERS", "HOLE_COUNT"'
     tees_query = f"""SELECT {tee_select_keys} FROM TEE

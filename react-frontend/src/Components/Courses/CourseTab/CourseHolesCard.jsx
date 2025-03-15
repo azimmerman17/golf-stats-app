@@ -1,20 +1,20 @@
-import { useState, useEffect, useContext } from 'react'
+import { useState, useContext } from 'react'
 import Card from 'react-bootstrap/Card'
 import Dropdown from 'react-bootstrap/esm/Dropdown'
 import Carousel from 'react-bootstrap/Carousel';
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import Button from 'react-bootstrap/Button'
 
 import { CurrentUser } from '../../../Contexts/CurrentUserContext'
 
 import BuildHolebyHole from '../../../Functions/buildHoleByHole'
 
-const CourseHolesCard = ({ tees }) => {
+const CourseHolesCard = ({ tees, map, setShowModal }) => {
   const { currentUser, setCurrentUser} = useContext(CurrentUser)
-
   const [selections, setSelections] = useState({
     currentHole: 1,
-    currentTee: tees[0].NAME
+    currentTee: tees[0].NAME,
   })
   const { currentHole, currentTee} = selections
   
@@ -33,28 +33,29 @@ const CourseHolesCard = ({ tees }) => {
   const carouselHoles = course.map(carouselHole => {
     const { holeNumber, parMale, siMale, parFemale, siFemale } = carouselHole
     return (
+      
       <Carousel.Item className='pb-4' key={holeNumber} >
         <Row>
           <Col>
-          <h6>{parMale[currentTee] ? parMale[currentTee] : parMale['Default']}</h6>
-          <p className='text-muted'><small>MENS PAR</small></p>
+            <h6>{parMale[currentTee] ? parMale[currentTee] : parMale['Default']}</h6>
+            <p className='text-muted'><small>MENS PAR</small></p>
           </Col>
           <Col>
-          <h6>{siMale}</h6>
-          <p className='text-muted'><small>MENS SI</small></p>
+            <h6>{siMale}</h6>
+            <p className='text-muted'><small>MENS SI</small></p>
           </Col>
         </Row>
         <Row>
           <Col>
-          <h6>{parFemale[currentTee] ? parFemale[currentTee] : parFemale['Default']}</h6>
-          <p className='text-muted'><small>LADIES PAR</small></p>
+            <h6>{parFemale[currentTee] ? parFemale[currentTee] : parFemale['Default']}</h6>
+            <p className='text-muted'><small>LADIES PAR</small></p>
           </Col>
           <Col>
-          <h6>{siFemale}</h6>
-          <p className='text-muted'><small>LADIES SI</small></p>
+            <h6>{siFemale}</h6>
+            <p className='text-muted'><small>LADIES SI</small></p>
           </Col>
         </Row>
-        {/* Possible to have a hole map ??? */}
+        {map.filter(mapHole => mapHole.NUMBER === holeNumber) ? <Button className='mb-4' variant="danger" onClick={e => setShowModal({show: true, hole: holeNumber})}>View the Hole</Button> : null}
       </Carousel.Item>
     )
   })
