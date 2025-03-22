@@ -220,6 +220,33 @@ It is a best practice to have both the Male and Female PAR and SI values for eac
 | CREATED_AT | TIMESTAMP | | X | | NOW() | | | Timestamp record was created |
 | UPDATED_AT | TIMESTAMP | | X | | NOW() | | | Timestamp record was last updated |
 
+#### HOLE
+
+This table will hold data concerning the geographic coordinates for each hole.  Each hole wil only have 1 record, and will be used in the mapping of the course.
+
+| NAME | DATA TYPE | UNIQUE | NOT NULL | PRIMARY KEY | DEFAULT | FOREIGN KEY | CONSTRAINTS | DESCRIPTION |
+| --- | --- | :-: | :-: | :-: | :-: | :-: | :-: | --- |
+| HOLE_GEO_ID | SERIAL | x | x | x |  |  |  | Unique ID for hole, auto generated at creation |
+| COURSE_ID | INTEGER | | X | | | COURSE.COURSE_ID | |ID for the course the hole is attached |
+| HANDLE | INTEGER | X | X | | | | | Handle of the course - could be different from facility
+| NUMBER | INTEGER | | |  | | |  | Number of the Hole |
+| TEE_LAT | FLOAT | | | | | | <90 and >-90 | Latitude Coordinate of the Tee |
+| TEE_LON | FLOAT | | | | | | <180 and >-180 | Longitude Coordinate of the Tee |
+| DL_LAT | FLOAT | | | | | | <90 and >-90 | Latitude Coordinate of the Dog Leg Corner |
+| DL_LON | FLOAT | | | | | | <180 and >-180 | Longitude Coordinate of the Dog Leg Corner |
+| DL2_LAT | FLOAT | | | | | | <90 and >-90 | Latitude Coordinate of the Second Dog Leg Corner |
+| DL2_LON | FLOAT | | | | | | <180 and >-180 | Longitude Coordinate of the Second Dog Leg Corner |
+| CGREEN_LAT | FLOAT | | | | | | <90 and >-90 | Latitude Coordinate of the Center of the Green |
+| CGREEN_LON | FLOAT | | | | | | <180 and >-180 | Longitude Coordinate of the Center of the Green |
+| FGREEN_LAT | FLOAT | | | | | | <90 and >-90 | Latitude Coordinate of the Front of the Green |
+| FGREEN_LON | FLOAT | | | | | | <180 and >-180 | Longitude Coordinate of the Front of the Green |
+| BGREEN_LAT | FLOAT | | | | | | <90 and >-90 | Latitude Coordinate of the Back of the Green |
+| BGREEN_LON | FLOAT | | | | | | <180 and >-180 | Longitude Coordinate of the Back of the Green |
+| ZOOM | INTEGER | | | | | | <= 20 and > 0 | Default Tile Zoom for Map |
+| ROTATION | FLOAT | | | | | | <360 and >=0 | Rotation of Map to have the hole up and down |
+| GREEN_DEPTH | FLOAT | | | | | | | Depth of Green |
+| CREATED_AT | TIMESTAMP | | X | | NOW() | | | Timestamp record was created |
+| UPDATED_AT | TIMESTAMP | | X | | NOW() | | | Timestamp record was last updated |
 
 ***For the most accurate golf course and facility related data, consult the USGA, GHIN, and facility websites.***
 
