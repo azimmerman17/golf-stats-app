@@ -943,7 +943,7 @@ def course_geo_insert(config_class=Config):
           'BGREEN_LON': course['data']['backlng'][n] if course['data']['backlng'][n] != 0.0 else None,
           'ZOOM': course['data']['zoom'][n],
           'ROTATION': course['data']['rotation'][n],
-          'GREEN_DEPTH': course['data']['greendepth'][n] if course['data']['backlng'][n] > 0 else None,
+          'GREEN_DEPTH': course['data']['greendepth'][n] if course['data']['greendepth'][n] > 0 else None,
         }
 
         # build insert for data
@@ -1061,7 +1061,7 @@ def facility_seed_geo(config_class=Config):
           'BGREEN_LON': course['data']['backlng'][n] if course['data']['backlng'][n] != 0.0 else None,
           'ZOOM': course['data']['zoom'][n],
           'ROTATION': course['data']['rotation'][n],
-          'GREEN_DEPTH': course['data']['greendepth'][n] if course['data']['backlng'][n] > 0 else None,
+          'GREEN_DEPTH': course['data']['greendepth'][n] if course['data']['greendepth'][n] > 0 else None,
         }
 
         # build insert for data

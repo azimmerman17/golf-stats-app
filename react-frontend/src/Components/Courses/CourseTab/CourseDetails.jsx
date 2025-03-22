@@ -12,7 +12,6 @@ import HoleCardModal from '../../Maps/HoleCardModal';
 
 
 const CourseDetails = ({ course }) => {
-  console.log(course)
   const [showModal, setShowModal] = useState({show: false, hole: 1})
   const [ selectedTee, setSelectedTee ] = useState(course.TEES[0].NAME)
   const { TEES, MAP } = course
@@ -42,7 +41,7 @@ const CourseDetails = ({ course }) => {
           </Row>
         </Col>
       </Row>        
-      <HoleCardModal tees={TEES} map={MAP} showModal={showModal} setShowModal={setShowModal}/>
+      <HoleCardModal tees={TEES} mapData={MAP} showModal={showModal} setShowModal={setShowModal}/>
     </Container>
   )
 }
